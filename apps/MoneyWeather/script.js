@@ -762,34 +762,8 @@ function parseIndicesData(data) {
   return assets;
 }
 
-function parseFearGreedData(data) {
-  if (!data || !data.value) return getFearGreedMockData();
-  
-  const value = data.value;
-  const change = data.change || 0;
-  const label = getFearGreedLabel(value);
-  
-  return [createAsset({
-    id: 'feargreed',
-    name: '공포탐욕지수',
-    category: 'index',
-    price: value,
-    change: change,
-    priceDisplay: `${value}점 (${label})`,
-    changePointsDisplay: `${change >= 0 ? '+' : ''}${change}pt`,
-    status: getFearGreedStatus(value, change),
-    message: getFearGreedMessage(value),
-    advice: '0~100 사이 점수로, 25 이하면 극도의 공포, 75 이상이면 극도의 탐욕을 나타내요. 워런 버핏의 "남들이 두려워할 때 탐욕스러워라"를 떠올려보세요!'
-  })];
-}
 
-function getFearGreedLabel(value) {
-  if (value <= 25) return '극도의 공포';
-  if (value <= 45) return '공포';
-  if (value <= 55) return '중립';
-  if (value <= 75) return '탐욕';
-  return '극도의 탐욕';
-}
+
 
 function getKospiMessage(change) {
   if (Math.abs(change) > 2) return 'KOSPI 롤러코스터!';
@@ -838,13 +812,6 @@ function getUsBond2yMessage(change) {
   return '2년물 금리가 안정적이에요.';
 }
 
-function getFearGreedMessage(value) {
-  if (value <= 25) return '시장이 극도로 두려워하고 있어요!';
-  if (value <= 45) return '시장이 불안해하고 있어요.';
-  if (value <= 55) return '시장이 중립적이에요.';
-  if (value <= 75) return '시장이 탐욕적이에요.';
-  return '시장이 극도로 탐욕적이에요!';
-}
 
 // Status determination functions
 function getUsdStatus(rate) {
@@ -1298,16 +1265,7 @@ function getIndicesMockData() {
   ];
 }
 
-function getFearGreedMockData() {
-  return [
-    createAsset({
-      id: 'feargreed', name: '공포탐욕지수', category: 'index',
-      price: 65, change: 5, priceDisplay: '65점 (탐욕)', changePointsDisplay: '+5pt',
-      status: 'cloudy', message: '시장이 탐욕적이에요.',
-      advice: '0~100 사이 점수로, 25 이하면 극도의 공포, 75 이상이면 극도의 탐욕을 나타내요.'
-    })
-  ];
-}
+
 
 // Sorting
 function sortAssetsByOrder() {
