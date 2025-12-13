@@ -1,34 +1,42 @@
 exports.handler = async function(event, context) {
-  // 심볼: ^GSPC(S&P500), ^IXIC(나스닥), ^KS11(코스피)
-  const symbols = ["^GSPC", "^IXIC", "^KS11"];
+  // ^KS11: 코스피, ^KQ11: 코스닥, ^IXIC: 나스닥, ^GSPC: S&P500, ^DJI: 다우존스, ^TNX: 미 국채 10년
+  const symbols = ["^KS11", "^KQ11", "^IXIC", "^GSPC", "^DJI", "^TNX"];
   
-  // 여러 개를 한 번에 부르기 위해 Promise.all 사용
-  const requests = symbols.map(symbol => 
-    fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d`)
+  // 병렬 요청으로 속도 향상
+  const promises = symbols.map(sym => 
+    fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${sym}?interval=1d&range=1d`)
       .then(res => res.json())
+      .catch(() => null)
   );
 
   try {
-    const results = await Promise.all(requests);
+    const results = await Promise.all(promises);
     
-    // 야후 데이터가 복잡해서 필요한 것만 깔끔하게 정리
-    const simplifiedData = results.map((data, index) => {
+    // 데이터 정리 함수
+    const extract = (data) => {
+      if (!data || !data.chart || !data.chart.result) return { price: 0, change: 0 };
       const meta = data.chart.result[0].meta;
-      return {
-        symbol: symbols[index],
-        name: symbols[index] === "^GSPC" ? "S&P 500" : symbols[index] === "^IXIC" ? "NASDAQ" : "KOSPI",
-        price: meta.regularMarketPrice,
-        change: meta.regularMarketPrice - meta.chartPreviousClose, // 등락폭
-        percent: ((meta.regularMarketPrice - meta.chartPreviousClose) / meta.chartPreviousClose) * 100 // 등락률
-      };
-    });
+      const price = meta.regularMarketPrice;
+      const prev = meta.chartPreviousClose;
+      const change = ((price - prev) / prev) * 100;
+      return { price, change };
+    };
+
+    const result = {
+      kospi: extract(results[0]),
+      kosdaq: extract(results[1]),
+      nasdaq: extract(results[2]),
+      sp500: extract(results[3]),
+      dowjones: extract(results[4]),
+      bonds10y: { yield: results[5]?.chart?.result[0]?.meta?.regularMarketPrice || 0, change: 0 }
+    };
 
     return {
       statusCode: 200,
-      headers: { "Access-Control-Allow-Origin": "*", "Content-Type": "application/json" },
-      body: JSON.stringify(simplifiedData)
+      headers: { "Access-Control-Allow-Origin": "*" },
+      body: JSON.stringify(result)
     };
   } catch (error) {
-    return { statusCode: 500, body: JSON.stringify({ error: "Indices API Error" }) };
+    return { statusCode: 500, body: "Error" };
   }
 };
