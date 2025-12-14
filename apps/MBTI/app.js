@@ -23,7 +23,8 @@ const App = {
     const savedTheme = localStorage.getItem('mbti-theme');
     if (savedLang) this.state.language = savedLang;
     if (savedTheme) this.state.theme = savedTheme;
-    document.getElementById('language-select').value = this.state.language;
+    const langSelect = document.getElementById('language-select');
+    if(langSelect) langSelect.value = this.state.language;
   },
   
   t(key) {
@@ -56,16 +57,23 @@ const App = {
   
   showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    // hidden 클래스도 같이 제어 (HTML 구조에 따라 필요할 수 있음)
+    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+
     const targetScreen = document.getElementById(screenId);
     if (targetScreen) {
       targetScreen.classList.add('active');
+      targetScreen.classList.remove('hidden');
       window.scrollTo(0, 0);
     }
+    
     const restartBtn = document.getElementById('restart-btn');
-    if (screenId !== 'screen-home') {
-      restartBtn.classList.remove('hidden');
-    } else {
-      restartBtn.classList.add('hidden');
+    if (restartBtn) {
+        if (screenId !== 'screen-home') {
+          restartBtn.classList.remove('hidden');
+        } else {
+          restartBtn.classList.add('hidden');
+        }
     }
   },
   
@@ -73,10 +81,14 @@ const App = {
     const toast = document.getElementById('toast');
     const toastTitle = document.getElementById('toast-title');
     const toastDesc = document.getElementById('toast-description');
-    toastTitle.textContent = title;
-    toastDesc.textContent = description;
-    toast.classList.remove('hidden');
-    setTimeout(() => toast.classList.add('hidden'), 3000);
+    
+    if(toastTitle) toastTitle.textContent = title;
+    if(toastDesc) toastDesc.textContent = description;
+    
+    if(toast) {
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 3000);
+    }
   },
   
   renderMbtiGrid(containerId, type) {
@@ -106,16 +118,28 @@ const App = {
     
     if (type === 'parent') {
       this.state.parentMbti = mbti;
-      document.getElementById('selected-parent-mbti').textContent = mbti;
-      document.getElementById('selected-parent-mbti').classList.remove('hidden');
-      document.getElementById('no-parent-mbti').classList.add('hidden');
-      document.getElementById('btn-confirm-parent').disabled = false;
+      const label = document.getElementById('selected-parent-mbti');
+      if(label) {
+          label.textContent = mbti;
+          label.classList.remove('hidden');
+      }
+      const noLabel = document.getElementById('no-parent-mbti');
+      if(noLabel) noLabel.classList.add('hidden');
+      
+      const confirmBtn = document.getElementById('btn-confirm-parent');
+      if(confirmBtn) confirmBtn.disabled = false;
     } else {
       this.state.childMbti = mbti;
-      document.getElementById('selected-child-mbti').textContent = mbti;
-      document.getElementById('selected-child-mbti').classList.remove('hidden');
-      document.getElementById('no-child-mbti').classList.add('hidden');
-      document.getElementById('btn-confirm-child').disabled = false;
+      const label = document.getElementById('selected-child-mbti');
+      if(label) {
+          label.textContent = mbti;
+          label.classList.remove('hidden');
+      }
+      const noLabel = document.getElementById('no-child-mbti');
+      if(noLabel) noLabel.classList.add('hidden');
+      
+      const confirmBtn = document.getElementById('btn-confirm-child');
+      if(confirmBtn) confirmBtn.disabled = false;
     }
   },
   
@@ -141,8 +165,10 @@ const App = {
     container.querySelectorAll('.age-card').forEach(card => {
       card.addEventListener('click', () => {
         this.state.childAge = card.dataset.age;
-        document.getElementById('child-age-badge').textContent = this.t('age.' + this.state.childAge);
-        document.getElementById('child-age-badge-2').textContent = this.t('age.' + this.state.childAge);
+        const badge1 = document.getElementById('child-age-badge');
+        const badge2 = document.getElementById('child-age-badge-2');
+        if(badge1) badge1.textContent = this.t('age.' + this.state.childAge);
+        if(badge2) badge2.textContent = this.t('age.' + this.state.childAge);
         this.showScreen('screen-child-mbti-option');
       });
     });
@@ -180,95 +206,172 @@ const App = {
     this.state.childMbti = null;
     this.state.childAge = null;
     document.querySelectorAll('.mbti-btn.selected').forEach(b => b.classList.remove('selected'));
-    document.getElementById('selected-parent-mbti').classList.add('hidden');
-    document.getElementById('no-parent-mbti').classList.remove('hidden');
-    document.getElementById('btn-confirm-parent').disabled = true;
-    document.getElementById('selected-child-mbti').classList.add('hidden');
-    document.getElementById('no-child-mbti').classList.remove('hidden');
-    document.getElementById('btn-confirm-child').disabled = true;
-    document.getElementById('hero-question-card').classList.remove('hidden');
-    document.getElementById('hero-mbti-selector').classList.add('hidden');
+    
+    const pSelected = document.getElementById('selected-parent-mbti');
+    if(pSelected) pSelected.classList.add('hidden');
+    const pNone = document.getElementById('no-parent-mbti');
+    if(pNone) pNone.classList.remove('hidden');
+    const pBtn = document.getElementById('btn-confirm-parent');
+    if(pBtn) pBtn.disabled = true;
+    
+    const cSelected = document.getElementById('selected-child-mbti');
+    if(cSelected) cSelected.classList.add('hidden');
+    const cNone = document.getElementById('no-child-mbti');
+    if(cNone) cNone.classList.remove('hidden');
+    const cBtn = document.getElementById('btn-confirm-child');
+    if(cBtn) cBtn.disabled = true;
+    
+    const heroQ = document.getElementById('hero-question-card');
+    if(heroQ) heroQ.classList.remove('hidden');
+    const heroSel = document.getElementById('hero-mbti-selector');
+    if(heroSel) heroSel.classList.add('hidden');
+    
     this.showScreen('screen-home');
-    Quiz.reset();
+    if(typeof Quiz !== 'undefined') Quiz.reset();
   },
   
   bindEvents() {
-    document.getElementById('language-select').addEventListener('change', (e) => {
-      this.state.language = e.target.value;
-      localStorage.setItem('mbti-language', this.state.language);
-      this.updateLanguage();
-      this.renderAgeCards();
-    });
-    
-    document.getElementById('theme-toggle').addEventListener('click', () => this.toggleTheme());
-    document.getElementById('logo-link').addEventListener('click', (e) => {
-      e.preventDefault();
-      this.restart();
-    });
-    document.getElementById('restart-btn').addEventListener('click', () => this.restart());
-    
-    
-    document.getElementById('btn-know-mbti').addEventListener('click', () => {
-      document.getElementById('hero-question-card').classList.add('hidden');
-      document.getElementById('hero-mbti-selector').classList.remove('hidden');
-    });
-    
-    document.getElementById('btn-take-quiz').addEventListener('click', () => {
-      Quiz.start('parent');
-    });
-    
-    document.getElementById('btn-back-home').addEventListener('click', () => {
-      document.getElementById('hero-question-card').classList.remove('hidden');
-      document.getElementById('hero-mbti-selector').classList.add('hidden');
-    });
-    
-    document.getElementById('btn-confirm-parent').addEventListener('click', () => {
-      if (this.state.parentMbti) {
-        this.showToast(this.t('toast.parentComplete'), this.t('toast.parentCompleteDesc'));
-        this.showScreen('screen-child-age');
-      }
-    });
-    
-    document.getElementById('btn-child-know-mbti').addEventListener('click', () => {
-      this.showScreen('screen-child-mbti-select');
-    });
-    
-    document.getElementById('btn-child-take-quiz').addEventListener('click', () => {
-      Quiz.start('child');
-    });
-    
-    document.getElementById('btn-back-age').addEventListener('click', () => {
-      this.showScreen('screen-child-age');
-    });
-    
-    document.getElementById('btn-back-mbti-option').addEventListener('click', () => {
-      this.showScreen('screen-child-mbti-option');
-    });
-    
-    document.getElementById('btn-confirm-child').addEventListener('click', () => {
-      if (this.state.childMbti) {
-        this.showToast(this.t('toast.childComplete'), this.t('toast.childCompleteDesc'));
-        Quiz.showResult();
-      }
-    });
-    
-    document.getElementById('btn-share').addEventListener('click', () => {
-      const url = window.location.href.split('?')[0] + `?p=${this.state.parentMbti}&c=${this.state.childMbti}`;
-      if (navigator.share) {
-        navigator.share({ title: this.t('site.title'), url: url });
-      } else {
-        navigator.clipboard.writeText(url).then(() => {
-          this.showToast(this.t('toast.copied'), this.t('toast.copiedDesc'));
+    // 언어 변경
+    const langSelect = document.getElementById('language-select');
+    if(langSelect) {
+        langSelect.addEventListener('change', (e) => {
+          this.state.language = e.target.value;
+          localStorage.setItem('mbti-language', this.state.language);
+          this.updateLanguage();
+          this.renderAgeCards();
         });
-      }
-    });
+    }
     
-    document.getElementById('btn-parent-prev').addEventListener('click', () => Quiz.prevQuestion('parent'));
-    document.getElementById('btn-parent-next').addEventListener('click', () => Quiz.nextQuestion('parent'));
-    document.getElementById('btn-parent-submit').addEventListener('click', () => Quiz.submitQuiz('parent'));
-    document.getElementById('btn-child-prev').addEventListener('click', () => Quiz.prevQuestion('child'));
-    document.getElementById('btn-child-next').addEventListener('click', () => Quiz.nextQuestion('child'));
-    document.getElementById('btn-child-submit').addEventListener('click', () => Quiz.submitQuiz('child'));
+    // 테마 변경
+    const themeBtn = document.getElementById('theme-toggle');
+    if(themeBtn) themeBtn.addEventListener('click', () => this.toggleTheme());
+    
+    // 로고 클릭
+    const logoLink = document.getElementById('logo-link');
+    if(logoLink) {
+        logoLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.restart();
+        });
+    }
+
+    // 헤더 다시 시작 버튼
+    const restartBtn = document.getElementById('restart-btn');
+    if(restartBtn) restartBtn.addEventListener('click', () => this.restart());
+
+    // [삭제됨] btn-restart-result 관련 코드 제거됨 (HTML onclick으로 처리)
+    
+    // 부모 MBTI 알아요 버튼
+    const btnKnowMbti = document.getElementById('btn-know-mbti');
+    if(btnKnowMbti) {
+        btnKnowMbti.addEventListener('click', () => {
+          document.getElementById('hero-question-card').classList.add('hidden');
+          document.getElementById('hero-mbti-selector').classList.remove('hidden');
+        });
+    }
+    
+    // 부모 퀴즈 시작 버튼
+    const btnTakeQuiz = document.getElementById('btn-take-quiz');
+    if(btnTakeQuiz) {
+        btnTakeQuiz.addEventListener('click', () => {
+          if(typeof Quiz !== 'undefined') Quiz.start('parent');
+        });
+    }
+    
+    // 홈 뒤로가기
+    const btnBackHome = document.getElementById('btn-back-home');
+    if(btnBackHome) {
+        btnBackHome.addEventListener('click', () => {
+          document.getElementById('hero-question-card').classList.remove('hidden');
+          document.getElementById('hero-mbti-selector').classList.add('hidden');
+        });
+    }
+    
+    // 부모 확정 버튼
+    const btnConfirmParent = document.getElementById('btn-confirm-parent');
+    if(btnConfirmParent) {
+        btnConfirmParent.addEventListener('click', () => {
+          if (this.state.parentMbti) {
+            this.showToast(this.t('toast.parentComplete'), this.t('toast.parentCompleteDesc'));
+            this.showScreen('screen-child-age');
+          }
+        });
+    }
+    
+    // 아이 MBTI 알아요 버튼
+    const btnChildKnow = document.getElementById('btn-child-know-mbti');
+    if(btnChildKnow) {
+        btnChildKnow.addEventListener('click', () => {
+          this.showScreen('screen-child-mbti-select');
+        });
+    }
+    
+    // 아이 퀴즈 시작 버튼
+    const btnChildQuiz = document.getElementById('btn-child-take-quiz');
+    if(btnChildQuiz) {
+        btnChildQuiz.addEventListener('click', () => {
+          if(typeof Quiz !== 'undefined') Quiz.start('child');
+        });
+    }
+    
+    // 연령대 뒤로가기
+    const btnBackAge = document.getElementById('btn-back-age');
+    if(btnBackAge) {
+        btnBackAge.addEventListener('click', () => {
+          this.showScreen('screen-child-age');
+        });
+    }
+    
+    // 아이 MBTI 선택화면 뒤로가기
+    const btnBackMbtiOpt = document.getElementById('btn-back-mbti-option');
+    if(btnBackMbtiOpt) {
+        btnBackMbtiOpt.addEventListener('click', () => {
+          this.showScreen('screen-child-mbti-option');
+        });
+    }
+    
+    // 아이 확정 및 결과보기
+    const btnConfirmChild = document.getElementById('btn-confirm-child');
+    if(btnConfirmChild) {
+        btnConfirmChild.addEventListener('click', () => {
+          if (this.state.childMbti) {
+            this.showToast(this.t('toast.childComplete'), this.t('toast.childCompleteDesc'));
+            if(typeof Quiz !== 'undefined') Quiz.showResult();
+          }
+        });
+    }
+    
+    // 공유하기 버튼
+    const btnShare = document.getElementById('btn-share');
+    if(btnShare) {
+        btnShare.addEventListener('click', () => {
+          const url = window.location.href.split('?')[0] + `?p=${this.state.parentMbti}&c=${this.state.childMbti}`;
+          if (navigator.share) {
+            navigator.share({ title: this.t('site.title'), url: url });
+          } else {
+            navigator.clipboard.writeText(url).then(() => {
+              this.showToast(this.t('toast.copied'), this.t('toast.copiedDesc'));
+            });
+          }
+        });
+    }
+    
+    // 퀴즈 네비게이션 버튼들
+    const ids = [
+        'btn-parent-prev', 'btn-parent-next', 'btn-parent-submit',
+        'btn-child-prev', 'btn-child-next', 'btn-child-submit'
+    ];
+    
+    ids.forEach(id => {
+        const el = document.getElementById(id);
+        if(el && typeof Quiz !== 'undefined') {
+            el.addEventListener('click', () => {
+                if(id.includes('prev')) Quiz.prevQuestion(id.includes('parent') ? 'parent' : 'child');
+                else if(id.includes('next')) Quiz.nextQuestion(id.includes('parent') ? 'parent' : 'child');
+                else if(id.includes('submit')) Quiz.submitQuiz(id.includes('parent') ? 'parent' : 'child');
+            });
+        }
+    });
     
     this.checkUrlParams();
   },
@@ -277,10 +380,10 @@ const App = {
     const params = new URLSearchParams(window.location.search);
     const parentMbti = params.get('p');
     const childMbti = params.get('c');
-    if (parentMbti && childMbti && mbtiTypes[parentMbti] && mbtiTypes[childMbti]) {
+    if (parentMbti && childMbti && typeof mbtiTypes !== 'undefined' && mbtiTypes[parentMbti] && mbtiTypes[childMbti]) {
       this.state.parentMbti = parentMbti;
       this.state.childMbti = childMbti;
-      Quiz.showResult();
+      if(typeof Quiz !== 'undefined') Quiz.showResult();
     }
   }
 };
