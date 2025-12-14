@@ -242,27 +242,31 @@ const Quiz = {
   renderDimensionBars(parentMbti, childMbti) {
     const container = document.getElementById('dimension-bars');
     const dimensions = [
-      { key: 'EI', parent: parentMbti[0], child: childMbti[0] },
-      { key: 'SN', parent: parentMbti[1], child: childMbti[1] },
-      { key: 'TF', parent: parentMbti[2], child: childMbti[2] },
-      { key: 'JP', parent: parentMbti[3], child: childMbti[3] }
+      { key: 'EI', parent: parentMbti[0], child: childMbti[0], leftLabel: 'E (외향)', rightLabel: 'I (내향)' },
+      { key: 'SN', parent: parentMbti[1], child: childMbti[1], leftLabel: 'S (현실)', rightLabel: 'N (직관)' },
+      { key: 'TF', parent: parentMbti[2], child: childMbti[2], leftLabel: 'T (논리)', rightLabel: 'F (감성)' },
+      { key: 'JP', parent: parentMbti[3], child: childMbti[3], leftLabel: 'J (계획)', rightLabel: 'P (자유)' }
     ];
     
     container.innerHTML = dimensions.map(dim => {
       const match = dim.parent === dim.child;
       return `<div class="dimension-bar">
-        <div class="dim-header">
-          <span class="dim-name" data-i18n="result.dim${dim.key}">${App.t('result.dim' + dim.key)}</span>
-          ${match ? `<span class="dim-match">${App.t('result.match')}</span>` : ''}
-        </div>
-        <div class="dim-values">
-          <div class="dim-value parent">
-            <span class="dim-label">${App.t('result.parentLabel')}</span>
-            <span class="dim-trait" data-i18n="result.trait${dim.parent}">${App.t('result.trait' + dim.parent)}</span>
+        <div class="dimension-header">
+          <div class="dimension-title">
+            <span class="dimension-name">${App.t('result.dim' + dim.key)}</span>
+            ${match ? `<span class="match-badge">${App.t('result.match')}</span>` : ''}
           </div>
-          <div class="dim-value child">
-            <span class="dim-label">${App.t('result.childLabel')}</span>
-            <span class="dim-trait" data-i18n="result.trait${dim.child}">${App.t('result.trait' + dim.child)}</span>
+          <div class="dimension-labels">
+            <span class="label-left">${dim.leftLabel}</span>
+            <span class="label-right">${dim.rightLabel}</span>
+          </div>
+        </div>
+        <div class="dimension-values">
+          <div class="value-item parent-value">
+            <span class="value-badge parent-badge">부모: ${dim.parent}</span>
+          </div>
+          <div class="value-item child-value">
+            <span class="value-badge child-badge">아이: ${dim.child}</span>
           </div>
         </div>
       </div>`;
