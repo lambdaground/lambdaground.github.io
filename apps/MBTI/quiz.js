@@ -188,13 +188,33 @@ const Quiz = {
   },
   
   showResult() {
-    const parentMbti = App.state.parentMbti;
-    const childMbti = App.state.childMbti;
-    
-    if (!parentMbti || !childMbti) return;
-    
+    // 1. MBTI 값을 가져와서 강제로 대문자로 변환 (소문자 오류 방지)
+    const parentMbti = App.state.parentMbti ? App.state.parentMbti.toUpperCase() : null;
+    const childMbti = App.state.childMbti ? App.state.childMbti.toUpperCase() : null;
+
+    // [디버깅] 콘솔에 현재 상태를 출력해서 확인
+    console.log("결과 계산 시도:", { parentMbti, childMbti });
+    console.log("데이터 확인:", typeof mbtiTypes); // 여기서 undefined가 뜨면 1단계 문제임
+
+    // 2. 데이터가 없거나 MBTI가 계산되지 않았을 때 멈춤 (에러 방지)
+    if (!parentMbti || !childMbti || typeof mbtiTypes === 'undefined') {
+      console.error("❌ 결과 표시에 실패했습니다. 데이터나 MBTI 값이 없습니다.");
+      alert("결과를 불러올 수 없습니다. 관리자에게 문의하세요.");
+      return;
+    }
+
+    // 3. 해당 MBTI 데이터가 실제로 있는지 확인
     const parentData = mbtiTypes[parentMbti];
     const childData = mbtiTypes[childMbti];
+
+    if (!parentData || !childData) {
+      console.error(`❌ mbtiTypes 안에 ${parentMbti} 또는 ${childMbti} 데이터가 없습니다.`);
+      return;
+    }
+
+    // --- 기존 코드 계속 ---
+    document.getElementById('result-parent-mbti').textContent = parentMbti;
+    // ... (아래는 원래 코드와 동일)
     
     document.getElementById('result-parent-mbti').textContent = parentMbti;
     document.getElementById('result-child-mbti').textContent = childMbti;
