@@ -213,57 +213,112 @@ const Quiz = {
     }
   },
 
+  // 이 함수를 quiz.js 안의 showResult 자리에 그대로 덮어쓰세요
   showResult() {
-    // 안전장치
+    console.log("showResult 실행됨");
+
+    // ✨ [핵심 수정] 선택한 MBTI가 있으면, 그 성향을 100%로 설정하는 함수
+    const createExactResult = (mbti) => {
+        if (!mbti) return null;
+        const type = mbti.toUpperCase();
+        
+        // 로직: 해당 글자가 포함되어 있으면 100%, 아니면 0% (그래프가 꽉 차게 됨)
+        // 기준: 오른쪽 항목(I, N, F, P)이 기준입니다.
+        // 예: 'E'가 있으면 I 점수는 0점 -> 왼쪽(E) 그래프가 100% 참.
+        return {
+            type: type,
+            dimensionScores: {
+                // E-I (I가 있으면 100%, E면 0%)
+                EI: { percentage: type.includes('I') ? 100 : 0 },
+                // S-N (N이 있으면 100%, S면 0%)
+                SN: { percentage: type.includes('N') ? 100 : 0 },
+                // T-F (F가 있으면 100%, T면 0%)
+                TF: { percentage: type.includes('F') ? 100 : 0 },
+                // J-P (P가 있으면 100%, J면 0%)
+                JP: { percentage: type.includes('P') ? 100 : 0 }
+            }
+        };
+    };
+
+    // 1. 퀴즈 데이터가 없으면, 선택한 MBTI 글자로 100% 데이터 생성
+    if (!App.state.parentResult && App.state.parentMbti) {
+        console.log("부모 선택 결과 생성 (100% 적용)");
+        App.state.parentResult = createExactResult(App.state.parentMbti);
+    }
+    if (!App.state.childResult && App.state.childMbti) {
+        console.log("아이 선택 결과 생성 (100% 적용)");
+        App.state.childResult = createExactResult(App.state.childMbti);
+    }
+
+    // 2. 여전히 데이터가 없으면 에러 처리
     if (!App.state.parentResult || !App.state.childResult) {
-       console.error("결과 데이터가 없습니다.");
+       console.error("❌ 결과 데이터가 없습니다. (MBTI 선택도 안 된 상태)");
+       alert("결과를 불러올 수 없습니다. 처음부터 다시 시도해주세요.");
        return;
     }
 
-    const parentRes = App.state.parentResult;
-    const childRes = App.state.childResult;
-    const pType = parentRes.type.toUpperCase();
-    const cType = childRes.type.toUpperCase();
-    
-    const parentData = mbtiTypes[pType] || mbtiTypes['ENFP'];
-    const childData = mbtiTypes[cType] || mbtiTypes['ENFP'];
+    try {
+        const parentRes = App.state.parentResult;
+        const childRes = App.state.childResult;
+        const pType = parentRes.type ? parentRes.type.toUpperCase() : "ESFJ";
+        const cType = childRes.type ? childRes.type.toUpperCase() : "ESFJ";
+        
+        // 데이터 가져오기 (Fallback 포함)
+        const parentData = (typeof mbtiTypes !== 'undefined' && mbtiTypes[pType]) ? mbtiTypes[pType] : (typeof mbtiTypes !== 'undefined' ? mbtiTypes['ENFP'] : {});
+        const childData = (typeof mbtiTypes !== 'undefined' && mbtiTypes[cType]) ? mbtiTypes[cType] : (typeof mbtiTypes !== 'undefined' ? mbtiTypes['ENFP'] : {});
 
-    // 이미지
-    const pImg = document.getElementById('result-parent-img');
-    const cImg = document.getElementById('result-child-img');
-    if(pImg) pImg.src = `images/${mbtiImageMap[pType] || 'intj_wise_owl_mascot.png'}`;
-    if(cImg) cImg.src = `images/${mbtiImageMap[cType] || 'intj_wise_owl_mascot.png'}`;
+        // 헬퍼 함수
+        const setText = (id, text) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = text;
+        };
+        const setSrc = (id, src) => {
+            const el = document.getElementById(id);
+            if (el) el.src = src;
+        };
 
-    // 텍스트
-    document.getElementById('result-parent-mbti').textContent = pType;
-    document.getElementById('result-child-mbti').textContent = cType;
-    document.getElementById('result-parent-animal').textContent = parentData.animal;
-    document.getElementById('result-child-animal').textContent = childData.animal;
-    document.getElementById('result-parent-nickname').textContent = parentData.nickname;
-    document.getElementById('result-child-nickname').textContent = childData.nickname;
+        // 이미지 설정
+        const defImg = 'intj_wise_owl_mascot.png';
+        const pImgName = (typeof mbtiImageMap !== 'undefined') ? (mbtiImageMap[pType] || defImg) : defImg;
+        const cImgName = (typeof mbtiImageMap !== 'undefined') ? (mbtiImageMap[cType] || defImg) : defImg;
+        
+        setSrc('result-parent-img', `images/${pImgName}`);
+        setSrc('result-child-img', `images/${cImgName}`);
 
-    // 궁합 점수
-    const compatibility = this.calculateCompatibility(pType, cType);
-    document.getElementById('compatibility-score').textContent = `${compatibility}%`;
-    
-    const msgEl = document.getElementById('compatibility-message');
-    if (msgEl) {
-        if (compatibility >= 75) {
-            msgEl.textContent = "환상의 짝꿍! 서로의 부족한 점을 완벽하게 채워줄 수 있어요.";
-            msgEl.className = 'compatibility-message high';
-        } else if (compatibility >= 50) {
-            msgEl.textContent = "좋은 관계예요! 조금만 노력하면 더 깊이 이해할 수 있어요.";
-            msgEl.className = 'compatibility-message medium';
-        } else {
-            msgEl.textContent = "서로 다른 점이 매력적이에요! 배울 점이 많은 관계랍니다.";
-            msgEl.className = 'compatibility-message low';
+        // 텍스트 설정
+        setText('result-parent-mbti', pType);
+        setText('result-child-mbti', cType);
+        setText('result-parent-animal', parentData.animal || "동물");
+        setText('result-child-animal', childData.animal || "동물");
+        setText('result-parent-nickname', parentData.nickname || "별명");
+        setText('result-child-nickname', childData.nickname || "별명");
+
+        // 궁합 점수
+        const compatibility = this.calculateCompatibility(pType, cType);
+        setText('compatibility-score', `${compatibility}%`);
+        
+        const msgEl = document.getElementById('compatibility-message');
+        if (msgEl) {
+            if (compatibility >= 75) {
+                msgEl.textContent = "환상의 짝꿍! 서로의 부족한 점을 완벽하게 채워줄 수 있어요.";
+                msgEl.className = 'compatibility-message high';
+            } else if (compatibility >= 50) {
+                msgEl.textContent = "좋은 관계예요! 조금만 노력하면 더 깊이 이해할 수 있어요.";
+                msgEl.className = 'compatibility-message medium';
+            } else {
+                msgEl.textContent = "서로 다른 점이 매력적이에요! 배울 점이 많은 관계랍니다.";
+                msgEl.className = 'compatibility-message low';
+            }
         }
-    }
 
-    // 상세 내용 렌더링
-    this.renderDimensionBars(parentRes, childRes);
-    this.renderTraits(childData);
-    this.renderAdvice(pType, cType);
+        // 상세 렌더링 (그래프 등)
+        try { this.renderDimensionBars(parentRes, childRes); } catch(e) { console.error("그래프 그리기 실패:", e); }
+        try { this.renderTraits(childData); } catch(e) { console.error("특징 텍스트 실패:", e); }
+        try { this.renderAdvice(pType, cType); } catch(e) { console.error("조언 텍스트 실패:", e); }
+
+    } catch (error) {
+        console.error("❌ 결과 표시 중 에러:", error);
+    }
 
     App.showScreen('screen-result');
   },
