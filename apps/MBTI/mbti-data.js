@@ -14,14 +14,14 @@ const animalNames = {
 
 const animalImages = {
   INTJ: 'intj_wise_owl_mascot.png',
-  INTP: 'curious_raccoon_mascot_intp.png',
+  INTP: 'intp_curious_raccoon_mascot.png',
   ENTJ: 'entj_lion_leader_mascot.png',
   ENTP: 'entp_clever_fox_mascot.png',
   INFJ: 'infj_wise_wolf_mascot.png',
   INFP: 'infp_unicorn_dreamer_mascot.png',
   ENFJ: 'enfj_caring_dolphin_mascot.png',
   ENFP: 'playful_otter_mascot_enfp.png',
-  ISTJ: 'wise_turtle_mascot_istj.png',
+  ISTJ: 'istj_wise_turtle_mascot.png',
   ISFJ: 'isfj_caring_rabbit_mascot.png',
   ESTJ: 'estj_eagle_leader_mascot.png',
   ESFJ: 'cute_golden_retriever_mascot.png',
