@@ -1,22 +1,204 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="naver-site-verification" content="d8168ab19274b81be68e2e8c1f028bbc1bb95f10" />
-    <title>LambdaGround</title>
-    <style>
-        body { display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #1a1a1a; color: #fff; font-family: sans-serif; }
-        h1 { font-size: 3rem; }
-        p { color: #888; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <title>Lambda Ground - Engineering & Insight</title>
+  <meta name="description" content="A central hub for independent web applications including MBTI compatibility, Economic dashboards, and Engineering tools." />
+  <meta property="og:title" content="Lambda Ground" />
+  <meta property="og:description" content="A central hub for independent web applications." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@replit" />
+  <meta name="twitter:title" content="Lambda Ground" />
+  <meta name="twitter:description" content="A central hub for independent web applications." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <a href="./apps/MoneyWeather/" class="app-card">
-    <div class="app-icon">🌤️</div>
-    <div>
-        <div class="app-title">Money Weather</div>
-        <div class="app-desc">오늘의 경제 날씨는? 환율, 금리, 코인을 한눈에!</div>
-    </div>
-</a>
+  <div id="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="container header-content">
+        <a href="#" class="logo" data-page="home">
+          <span class="logo-lambda">Lambda</span><span class="logo-ground">Ground</span>
+        </a>
+        <nav class="nav-desktop">
+          <a href="#" class="nav-link active" data-page="home" data-i18n="nav.home">Home</a>
+          <a href="#" class="nav-link" data-page="contact" data-i18n="nav.contact">Contact</a>
+          <div class="nav-divider"></div>
+          <button class="icon-btn" id="theme-toggle" title="Toggle Theme">
+            <svg id="icon-sun" class="icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <svg id="icon-moon" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+          <button class="icon-btn" id="lang-toggle" title="Switch Language">🇰🇷</button>
+        </nav>
+        <div class="nav-mobile">
+          <button class="icon-btn" id="theme-toggle-mobile" title="Toggle Theme">
+            <svg id="icon-sun-mobile" class="icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <svg id="icon-moon-mobile" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+          <button class="icon-btn" id="lang-toggle-mobile" title="Switch Language">🇰🇷</button>
+          <button class="icon-btn" id="menu-toggle">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+    </header>
 
+    <!-- Mobile Menu -->
+    <div class="mobile-menu hidden" id="mobile-menu">
+      <div class="mobile-menu-content">
+        <a href="#" class="mobile-nav-link" data-page="home" data-i18n="nav.home">Home</a>
+        <a href="#" class="mobile-nav-link" data-page="contact" data-i18n="nav.contact">Contact</a>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="main-content">
+      <!-- Home Page -->
+      <div id="page-home" class="page active">
+        <section class="hero">
+          <h1 class="hero-title">
+            <span class="text-foreground">Lambda</span><span class="text-primary">Ground</span>
+          </h1>
+          <p class="hero-subtitle" data-i18n="hero.subtitle">Where Code Becomes Play 🚀</p>
+        </section>
+        <section class="container app-grid-section">
+          <div class="app-grid">
+            <!-- Card 1: Lotto Pick -->
+            <a href="#" class="app-card">
+              <div class="card-icon">🎰</div>
+              <h3 class="card-title" data-i18n="app.lotto.title">Lotto Pick</h3>
+              <p class="card-desc" data-i18n="app.lotto.desc">Get your lucky numbers for today. AI recommended lotto numbers!</p>
+            </a>
+            <!-- Card 2: Money Weather -->
+            <a href="#" class="app-card">
+              <div class="card-icon card-icon-sun">
+                <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" fill="none"/></svg>
+              </div>
+              <h3 class="card-title" data-i18n="app.money.title">Money Weather</h3>
+              <p class="card-desc" data-i18n="app.money.desc">Your daily financial forecast.</p>
+            </a>
+            <!-- Card 3: MBTI -->
+            <a href="#" class="app-card" data-page="mbti">
+              <div class="card-icon">🧩</div>
+              <h3 class="card-title" data-i18n="app.mbti.title">MBTI Compatibility</h3>
+              <p class="card-desc" data-i18n="app.mbti.desc">Check compatibility with parent & child animal mascots.</p>
+            </a>
+            <!-- Card 4: Engineering -->
+            <a href="#" class="app-card" data-page="engineering">
+              <div class="card-icon card-icon-cpu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg>
+              </div>
+              <h3 class="card-title" data-i18n="app.engineering.title">Engineering Tools</h3>
+              <p class="card-desc" data-i18n="app.engineering.desc">RF Transmission, Magnetic Core, Radio Wave, and Coil calculations.</p>
+            </a>
+          </div>
+        </section>
+      </div>
+
+      <!-- Contact Page -->
+      <div id="page-contact" class="page">
+        <section class="container page-container">
+          <div class="form-card">
+            <h2 class="form-title" data-i18n="contact.title">Contact Us</h2>
+            <p class="form-subtitle">We'd love to hear from you. Send us a message below.</p>
+            <form id="contact-form" name="contact" method="POST" data-netlify="true">
+              <input type="hidden" name="form-name" value="contact" />
+              <div class="form-group">
+                <label data-i18n="contact.name">Name</label>
+                <input type="text" name="name" required placeholder="John Doe" />
+              </div>
+              <div class="form-group">
+                <label data-i18n="contact.email">Email</label>
+                <input type="email" name="email" required placeholder="john@example.com" />
+              </div>
+              <div class="form-group">
+                <label data-i18n="contact.subject">Subject</label>
+                <input type="text" name="subject" required placeholder="Inquiry about..." />
+              </div>
+              <div class="form-group">
+                <label data-i18n="contact.message">Message</label>
+                <textarea name="message" required placeholder="Your message here..." rows="5"></textarea>
+              </div>
+              <button type="submit" class="btn-primary" data-i18n="contact.send">Send Message</button>
+            </form>
+          </div>
+        </section>
+      </div>
+
+      <!-- Privacy Page -->
+      <div id="page-privacy" class="page">
+        <section class="container page-container">
+          <a href="#" class="back-link" data-page="home">
+            <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span data-i18n="privacy.back">Back to Home</span>
+          </a>
+          <article class="prose">
+            <h1 data-i18n="privacy.title">Privacy Policy</h1>
+            <p class="lead" data-i18n="privacy.last_updated">Last updated: December 14, 2025</p>
+            <div class="highlight-box">
+              <p data-i18n="privacy.content">This is a standard privacy policy placeholder. We respect your privacy and are committed to protecting your personal data.</p>
+            </div>
+            <h3 data-i18n="privacy.section1.title">1. Information We Collect</h3>
+            <p data-i18n="privacy.section1.content">We collect information that you provide directly to us, such as when you create an account, update your profile, or communicate with us.</p>
+            <h3 data-i18n="privacy.section2.title">2. How We Use Your Information</h3>
+            <p data-i18n="privacy.section2.content">We use the information we collect to operate, maintain, and provide you with the features and functionality of the Service.</p>
+            <h3 data-i18n="privacy.section3.title">3. Data Security</h3>
+            <p data-i18n="privacy.section3.content">We implement appropriate technical and organizational measures to protect the security of your personal information.</p>
+            <h3 data-i18n="privacy.section4.title">4. Contact Us</h3>
+            <p><span data-i18n="privacy.section4.content">If you have any questions about this Privacy Policy, please contact us at:</span> <a href="mailto:privacy@lambdaground.com">privacy@lambdaground.com</a></p>
+          </article>
+        </section>
+      </div>
+
+      <!-- MBTI Page -->
+      <div id="page-mbti" class="page">
+        <section class="container page-container text-center">
+          <div class="placeholder-icon">🧩</div>
+          <h1 data-i18n="app.mbti.title">MBTI Compatibility</h1>
+          <p class="text-muted" data-i18n="app.mbti.desc">Check compatibility with parent & child animal mascots.</p>
+          <div class="placeholder-card">
+            <h3>Compatibility Check</h3>
+            <p>Select Parent Type vs Child Type logic would go here.</p>
+          </div>
+        </section>
+      </div>
+
+      <!-- Engineering Page -->
+      <div id="page-engineering" class="page">
+        <section class="container page-container">
+          <div class="page-header">
+            <div class="page-header-icon card-icon-cpu">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg>
+            </div>
+            <h1 data-i18n="app.engineering.title">Engineering Tools</h1>
+          </div>
+          <p class="text-muted mb-8">This collection of engineering tools is currently being integrated into the portal.</p>
+          <div class="tool-list">
+            <div class="tool-card"><h4>RF Transmission Line Calculator</h4></div>
+            <div class="tool-card"><h4>Magnetic Core Calculator</h4></div>
+            <div class="tool-card"><h4>Radio Wave Tools</h4></div>
+            <div class="tool-card"><h4>Coil Calculator</h4></div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container footer-content">
+        <p class="footer-copy">&copy; 2025 Lambda Ground. <span data-i18n="footer.rights">All rights reserved.</span></p>
+        <div class="footer-links">
+          <a href="#" data-page="privacy" data-i18n="nav.privacy">Privacy</a>
+          <a href="#" data-page="contact" data-i18n="nav.contact">Contact</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
