@@ -206,7 +206,7 @@ const App = {
       this.restart();
     });
     document.getElementById('restart-btn').addEventListener('click', () => this.restart());
-    document.getElementById('btn-restart-result').addEventListener('click', () => this.restart());
+    
     
     document.getElementById('btn-know-mbti').addEventListener('click', () => {
       document.getElementById('hero-question-card').classList.add('hidden');
