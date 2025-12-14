@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>나와 내 아이의 MBTI 궁합</title>
+  <meta name="description" content="부모님의 MBTI와 아이의 MBTI를 비교해서 서로를 더 잘 이해하고 소통하는 방법을 알아보세요!">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="header">
+      <div class="header-container">
+        <a href="#" class="logo" id="logo-link">
+          <span class="logo-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          </span>
+          <span class="logo-text" data-i18n="site.subtitle">부모-자녀 MBTI 궁합</span>
+        </a>
+        <div class="header-actions">
+          <select id="language-select" class="language-select" data-testid="select-language">
+            <option value="ko">한국어</option>
+            <option value="en">English</option>
+            <option value="ja">日本語</option>
+            <option value="zh">中文</option>
+          </select>
+          <button id="theme-toggle" class="btn btn-icon" data-testid="button-theme-toggle" aria-label="Toggle theme">
+            <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+            <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          </button>
+          <button id="restart-btn" class="btn btn-outline hidden" data-testid="button-restart" data-i18n="restart">다시 시작</button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section id="screen-home" class="screen active">
+        <div class="hero-section">
+          <div class="hero-bg"></div>
+          <div class="hero-content container">
+            <div class="hero-badge">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <span data-i18n="hero.badge">부모-자녀 MBTI 궁합</span>
+            </div>
+            <h1 class="hero-title">
+              <span data-i18n="hero.title1">나와 내 아이의</span>
+              <br>
+              <span class="hero-title-gradient" data-i18n="hero.title2">MBTI 궁합</span>
+            </h1>
+            <p class="hero-description" data-i18n="hero.description">
+              부모님의 MBTI와 아이의 MBTI를 비교해서 서로를 더 잘 이해하고 소통하는 방법을 알아보세요!
+            </p>
+            <div class="hero-features">
+              <div class="hero-feature">
+                <div class="feature-icon rose">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                </div>
+                <span data-i18n="hero.parentMbti">부모 MBTI</span>
+              </div>
+              <div class="hero-feature">
+                <div class="feature-icon sky">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.5 1.1 3.5 2.5s-.9 2.5-2 2.5c-.8 0-1.5-.4-1.5-1"/></svg>
+                </div>
+                <span data-i18n="hero.childMbti">아이 MBTI</span>
+              </div>
+              <div class="hero-feature">
+                <div class="feature-icon emerald">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
+                </div>
+                <span data-i18n="hero.analysis">궁합 분석</span>
+              </div>
+            </div>
+            
+            <div id="hero-question-card" class="card">
+              <div class="card-content text-center">
+                <h3 class="card-title" data-i18n="hero.askParentMbti">부모님의 MBTI를 알고 계신가요?</h3>
+                <div class="button-group">
+                  <button id="btn-know-mbti" class="btn btn-primary" data-testid="button-know-mbti">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span data-i18n="hero.knowMbti">네, MBTI를 알아요</span>
+                  </button>
+                  <button id="btn-take-quiz" class="btn btn-outline" data-testid="button-take-quiz">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
+                    <span data-i18n="hero.takeQuiz">아니요, 테스트할게요</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div id="hero-mbti-selector" class="card hidden">
+              <div class="card-content">
+                <div class="text-center">
+                  <h3 class="card-title" data-i18n="hero.selectParentMbti">부모님의 MBTI를 선택하세요</h3>
+                  <p class="card-subtitle">
+                    <span data-i18n="hero.selectedMbti">선택한 MBTI</span>: 
+                    <span id="selected-parent-mbti" class="badge badge-rose hidden"></span>
+                    <span id="no-parent-mbti" data-i18n="hero.none">없음</span>
+                  </p>
+                </div>
+                <div id="parent-mbti-grid" class="mbti-grid" data-testid="container-mbti-selector"></div>
+                <div class="button-group center">
+                  <button id="btn-back-home" class="btn btn-ghost" data-testid="button-back">
+                    <span data-i18n="hero.back">뒤로 가기</span>
+                  </button>
+                  <button id="btn-confirm-parent" class="btn btn-primary" disabled data-testid="button-confirm-mbti">
+                    <span data-i18n="hero.nextChildTest">다음: 아이 테스트</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <p class="hero-info" data-i18n="hero.info">부모님 MBTI 입력 또는 테스트 후, 아이 MBTI 테스트를 진행합니다</p>
+          </div>
+        </div>
+        
+        <section class="gallery-section">
+          <div class="container">
+            <div class="gallery-badge">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+              <span data-i18n="gallery.badge">16가지 MBTI 동물 캐릭터</span>
+            </div>
+            <h2 class="gallery-title" data-i18n="gallery.title">나와 우리 아이는 어떤 동물일까?</h2>
+            <p class="gallery-description" data-i18n="gallery.description">각 MBTI 유형에는 성격을 대표하는 귀여운 동물 캐릭터가 있어요!</p>
+            <div id="animal-gallery" class="animal-grid"></div>
+            <p class="gallery-info" data-i18n="gallery.info">테스트를 완료하면 부모님과 아이의 동물 캐릭터 궁합도 볼 수 있어요!</p>
+          </div>
+        </section>
+      </section>
+
+      <section id="screen-parent-quiz" class="screen">
+        <div class="quiz-container">
+          <div class="quiz-header">
+            <div class="quiz-progress">
+              <div class="progress-text">
+                <span id="parent-quiz-current">1</span> / <span id="parent-quiz-total">24</span>
+              </div>
+              <div class="progress-bar">
+                <div id="parent-quiz-progress-fill" class="progress-fill" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+          <div id="parent-quiz-content" class="quiz-content"></div>
+          <div class="quiz-footer">
+            <button id="btn-parent-prev" class="btn btn-ghost" data-testid="button-previous">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+              <span data-i18n="quiz.previous">이전</span>
+            </button>
+            <button id="btn-parent-next" class="btn btn-ghost hidden" data-testid="button-next">
+              <span data-i18n="quiz.next">다음</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+            <button id="btn-parent-submit" class="btn btn-primary hidden" data-testid="button-submit">
+              <span data-i18n="quiz.seeResult">결과 보기</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-child-age" class="screen">
+        <div class="container">
+          <div class="text-center">
+            <h2 class="section-title" data-i18n="age.selectTitle">연령대를 선택해주세요</h2>
+            <p class="section-description" data-i18n="age.selectDescription">나이에 맞는 질문으로 더 정확한 결과를 알 수 있어요</p>
+          </div>
+          <div id="age-cards" class="age-grid"></div>
+        </div>
+      </section>
+
+      <section id="screen-child-mbti-option" class="screen">
+        <div class="container">
+          <div class="text-center">
+            <span id="child-age-badge" class="badge badge-outline"></span>
+            <h2 class="section-title" data-i18n="age.askChildMbti">아이의 MBTI를 알고 계신가요?</h2>
+            <p class="section-description" data-i18n="age.askChildMbtiDesc">MBTI를 알고 있다면 바로 입력하고, 모른다면 테스트를 진행해요</p>
+          </div>
+          <div class="card">
+            <div class="card-content text-center">
+              <div class="button-group">
+                <button id="btn-child-know-mbti" class="btn btn-primary" data-testid="button-child-know-mbti">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span data-i18n="hero.knowMbti">네, MBTI를 알아요</span>
+                </button>
+                <button id="btn-child-take-quiz" class="btn btn-outline" data-testid="button-child-take-quiz">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
+                  <span data-i18n="hero.takeQuiz">아니요, 테스트할게요</span>
+                </button>
+              </div>
+              <button id="btn-back-age" class="btn btn-ghost" data-testid="button-back-age">
+                <span data-i18n="age.backToAge">연령대 다시 선택</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-child-mbti-select" class="screen">
+        <div class="container">
+          <div class="text-center">
+            <span id="child-age-badge-2" class="badge badge-outline"></span>
+            <h3 class="section-title" data-i18n="age.selectChildMbti">아이의 MBTI를 선택하세요</h3>
+            <p class="card-subtitle">
+              <span data-i18n="hero.selectedMbti">선택한 MBTI</span>: 
+              <span id="selected-child-mbti" class="badge badge-sky hidden"></span>
+              <span id="no-child-mbti" data-i18n="hero.none">없음</span>
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-content">
+              <div id="child-mbti-grid" class="mbti-grid" data-testid="container-child-mbti-selector"></div>
+              <div class="button-group center">
+                <button id="btn-back-mbti-option" class="btn btn-ghost" data-testid="button-back-mbti-option">
+                  <span data-i18n="hero.back">뒤로 가기</span>
+                </button>
+                <button id="btn-confirm-child" class="btn btn-primary" disabled data-testid="button-confirm-child-mbti">
+                  <span data-i18n="age.seeResult">궁합 결과 보기</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-child-quiz" class="screen">
+        <div class="quiz-container">
+          <div class="quiz-header">
+            <div class="quiz-progress">
+              <div class="progress-text">
+                <span id="child-quiz-current">1</span> / <span id="child-quiz-total">16</span>
+              </div>
+              <div class="progress-bar">
+                <div id="child-quiz-progress-fill" class="progress-fill" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+          <div id="child-quiz-content" class="quiz-content"></div>
+          <div class="quiz-footer">
+            <button id="btn-child-prev" class="btn btn-ghost" data-testid="button-child-previous">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+              <span data-i18n="quiz.ageSelect">연령대 선택</span>
+            </button>
+            <button id="btn-child-next" class="btn btn-ghost hidden" data-testid="button-child-next">
+              <span data-i18n="quiz.next">다음</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+            <button id="btn-child-submit" class="btn btn-primary hidden" data-testid="button-child-submit">
+              <span data-i18n="quiz.seeResult">결과 보기</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-result" class="screen">
+        <div class="container result-container">
+          <div class="text-center">
+            <h2 class="result-title" data-i18n="result.title">부모-자녀 MBTI 비교 결과</h2>
+            <p class="result-subtitle" data-i18n="result.subtitle">서로의 성향을 이해하고 더 나은 관계를 만들어가세요</p>
+          </div>
+          
+          <div class="result-cards">
+            <div class="result-card parent-card">
+              <div class="result-card-header">
+                <span class="result-label" data-i18n="result.parent">부모님</span>
+                <span id="result-parent-mbti" class="result-mbti"></span>
+              </div>
+              <div class="result-card-body">
+                <img id="result-parent-img" class="result-animal-img" src="" alt="">
+                <h3 id="result-parent-animal" class="result-animal-name"></h3>
+                <p id="result-parent-nickname" class="result-nickname"></p>
+              </div>
+            </div>
+            
+            <div class="compatibility-badge">
+              <span id="compatibility-score" class="score">75%</span>
+              <span class="score-label" data-i18n="result.compatibilityScore">성향 일치도</span>
+            </div>
+            
+            <div class="result-card child-card">
+              <div class="result-card-header">
+                <span class="result-label" data-i18n="result.child">아이</span>
+                <span id="result-child-mbti" class="result-mbti"></span>
+              </div>
+              <div class="result-card-body">
+                <img id="result-child-img" class="result-animal-img" src="" alt="">
+                <h3 id="result-child-animal" class="result-animal-name"></h3>
+                <p id="result-child-nickname" class="result-nickname"></p>
+              </div>
+            </div>
+          </div>
+          
+          <div id="compatibility-message" class="compatibility-message"></div>
+          
+          <div class="dimension-comparison">
+            <h3 class="comparison-title" data-i18n="result.compatibility">성향 유사도</h3>
+            <div id="dimension-bars" class="dimension-bars"></div>
+          </div>
+          
+          <div class="result-sections">
+            <div class="result-section">
+              <h3 class="section-title" data-i18n="result.keyTraits">핵심 성격 특성</h3>
+              <div id="child-traits" class="traits-list"></div>
+            </div>
+            
+            <div class="result-section">
+              <h3 class="section-title" data-i18n="result.myStrengths">나의 강점</h3>
+              <div id="child-strengths" class="strengths-list"></div>
+            </div>
+            
+            <div class="result-section">
+              <h3 class="section-title" data-i18n="result.likeActivities">이런 활동을 좋아할 거예요</h3>
+              <div id="child-activities" class="activities-list"></div>
+            </div>
+            
+            <div class="result-section">
+              <h3 class="section-title" data-i18n="result.parentAdvice">부모님을 위한 조언</h3>
+              <div id="parent-advice" class="advice-content"></div>
+            </div>
+          </div>
+          
+          <div class="result-actions">
+            <button id="btn-share" class="btn btn-outline" data-testid="button-share">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              <span data-i18n="result.shareResult">결과 공유하기</span>
+            </button>
+            <button id="btn-restart-result" class="btn btn-primary" data-testid="button-restart-result">
+              <span data-i18n="result.restartTest">다시 검사하기</span>
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-links">
+          <a href="#" data-i18n="nav.home">홈</a>
+          <a href="#" data-i18n="nav.about">소개</a>
+          <a href="#" data-i18n="nav.privacy">개인정보처리방침</a>
+          <a href="#" data-i18n="nav.contact">연락처</a>
+        </div>
+        <p class="footer-copyright" data-i18n="footer.copyright">© 2025 MBTI 궁합 테스트. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <div id="toast" class="toast hidden">
+      <div class="toast-content">
+        <h4 id="toast-title" class="toast-title"></h4>
+        <p id="toast-description" class="toast-description"></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="mbti-data.js"></script>
+  <script src="translations.js"></script>
+  <script src="quiz.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
