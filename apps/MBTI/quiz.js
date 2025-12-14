@@ -213,47 +213,37 @@ const Quiz = {
     }
   },
 
-  // 이 함수를 quiz.js 안의 showResult 자리에 그대로 덮어쓰세요
   showResult() {
     console.log("showResult 실행됨");
 
-    // ✨ [핵심 수정] 선택한 MBTI가 있으면, 그 성향을 100%로 설정하는 함수
     const createExactResult = (mbti) => {
         if (!mbti) return null;
         const type = mbti.toUpperCase();
-        
-        // 로직: 해당 글자가 포함되어 있으면 100%, 아니면 0% (그래프가 꽉 차게 됨)
-        // 기준: 오른쪽 항목(I, N, F, P)이 기준입니다.
-        // 예: 'E'가 있으면 I 점수는 0점 -> 왼쪽(E) 그래프가 100% 참.
         return {
             type: type,
             dimensionScores: {
-                // E-I (I가 있으면 100%, E면 0%)
                 EI: { percentage: type.includes('I') ? 100 : 0 },
-                // S-N (N이 있으면 100%, S면 0%)
                 SN: { percentage: type.includes('N') ? 100 : 0 },
-                // T-F (F가 있으면 100%, T면 0%)
                 TF: { percentage: type.includes('F') ? 100 : 0 },
-                // J-P (P가 있으면 100%, J면 0%)
                 JP: { percentage: type.includes('P') ? 100 : 0 }
             }
         };
     };
 
-    // 1. 퀴즈 데이터가 없으면, 선택한 MBTI 글자로 100% 데이터 생성
+    // [로직 보완] 결과 객체(Result)가 없으면 문자열(Mbti)을 기반으로 생성
+    // App.js에서 restart 시 null로 초기화해주므로 이제 안전합니다.
     if (!App.state.parentResult && App.state.parentMbti) {
-        console.log("부모 선택 결과 생성 (100% 적용)");
         App.state.parentResult = createExactResult(App.state.parentMbti);
     }
     if (!App.state.childResult && App.state.childMbti) {
-        console.log("아이 선택 결과 생성 (100% 적용)");
         App.state.childResult = createExactResult(App.state.childMbti);
     }
 
-    // 2. 여전히 데이터가 없으면 에러 처리
+    // 데이터 검증
     if (!App.state.parentResult || !App.state.childResult) {
-       console.error("❌ 결과 데이터가 없습니다. (MBTI 선택도 안 된 상태)");
-       alert("결과를 불러올 수 없습니다. 처음부터 다시 시도해주세요.");
+       console.error("❌ 결과 데이터가 부족합니다.");
+       alert("결과를 표시할 수 없습니다. 다시 시도해주세요.");
+       App.showScreen('screen-home'); // 홈으로 보내버리기
        return;
     }
 
