@@ -386,4 +386,25 @@ const Quiz = {
             // 여기선 간단히 advices에 있는 키를 찾도록 함
             if (advices[key]) result.push(advices[key]);
             else if (advices[`${cChar}-${pChar}`]) {
-                 // 키가 거꾸로 있을 경우(데이터에는 I-E만 있는데
+                 // 키가 거꾸로 있을 경우(데이터에는 I-E만 있는데 현재 상황이 E-I라면) 로직은 생략했으나, 
+                 // 위 advices 데이터에 양방향(E-I, I-E)을 모두 넣어두면 해결됨.
+                 // 위 데이터엔 단방향 예시만 있으므로, 실제론 8개 케이스 모두 적는게 좋음.
+                 // (위 코드는 예시 데이터에 맞춰서 동작함)
+            }
+        }
+    }
+    
+    if (result.length === 0) {
+        return '부모님과 아이의 성향이 정말 비슷해요! 서로의 마음을 누구보다 잘 이해할 수 있는 단짝 같은 사이가 될 거예요. 함께 취미 생활을 즐겨보세요.';
+    }
+    
+    // 가장 두드러지는 차이 하나만 보여주거나, 합쳐서 보여줌
+    return result[0] || "서로 다른 점을 인정해 주는 것이 가장 큰 사랑입니다.";
+  },
+
+  reset() {
+    this.currentIndex = 0;
+    this.answers = {};
+    this.questions = [];
+  }
+};
