@@ -252,43 +252,82 @@
         </div>
       </section>
 
-      <section id="screen-result" class="screen">
-        <div class="container result-container">
-          <div class="text-center">
-            <h2 class="result-title" data-i18n="result.title">부모-자녀 MBTI 비교 결과</h2>
-            <p class="result-subtitle" data-i18n="result.subtitle">서로의 성향을 이해하고 더 나은 관계를 만들어가세요</p>
+      <section id="screen-result" class="screen hidden">
+        <div class="container mx-auto px-4 py-8 max-w-4xl">
+          
+          <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2" data-i18n="result.title">부모-자녀 MBTI 비교 결과</h2>
+            <p class="text-gray-600" data-i18n="result.subtitle">서로의 성향을 이해하고 더 나은 관계를 만들어가세요</p>
           </div>
           
-          <div class="result-cards">
-            <div class="result-card parent-card">
-              <div class="result-card-header">
-                <span class="result-label" data-i18n="result.parent">부모님</span>
-                <span id="result-parent-mbti" class="result-mbti"></span>
-              </div>
-              <div class="result-card-body">
-                <img id="result-parent-img" class="result-animal-img" src="" alt="">
-                <h3 id="result-parent-animal" class="result-animal-name"></h3>
-                <p id="result-parent-nickname" class="result-nickname"></p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+              <div class="bg-gradient-to-br from-purple-500 to-indigo-600 p-8 text-center text-white">
+                <div class="w-32 h-32 mx-auto bg-white/20 backdrop-blur-sm rounded-full p-2 mb-4">
+                  <img id="result-parent-img" src="" alt="부모 동물" class="w-full h-full object-contain">
+                </div>
+                <span class="inline-block px-3 py-1 bg-white/20 rounded-full text-sm mb-2">부모님</span>
+                <h3 id="result-parent-mbti" class="text-4xl font-bold mb-2">Result</h3>
+                <p id="result-parent-nickname" class="text-lg opacity-90">분석 중...</p>
+                <p id="result-parent-animal" class="mt-2 font-bold opacity-80">동물 이름</p>
               </div>
             </div>
-            
-            <div class="compatibility-badge">
-              <span id="compatibility-score" class="score">75%</span>
-              <span class="score-label" data-i18n="result.compatibilityScore">성향 일치도</span>
-            </div>
-            
-            <div class="result-card child-card">
-              <div class="result-card-header">
-                <span class="result-label" data-i18n="result.child">아이</span>
-                <span id="result-child-mbti" class="result-mbti"></span>
+
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+              <div class="bg-gradient-to-br from-pink-400 to-rose-500 p-8 text-center text-white">
+                <div class="w-32 h-32 mx-auto bg-white/20 backdrop-blur-sm rounded-full p-2 mb-4">
+                  <img id="result-child-img" src="" alt="아이 동물" class="w-full h-full object-contain">
+                </div>
+                <span class="inline-block px-3 py-1 bg-white/20 rounded-full text-sm mb-2">아이</span>
+                <h3 id="result-child-mbti" class="text-4xl font-bold mb-2">Result</h3>
+                <p id="result-child-nickname" class="text-lg opacity-90">분석 중...</p>
+                <p id="result-child-animal" class="mt-2 font-bold opacity-80">동물 이름</p>
               </div>
-              <div class="result-card-body">
-                <img id="result-child-img" class="result-animal-img" src="" alt="">
-                <h3 id="result-child-animal" class="result-animal-name"></h3>
-                <p id="result-child-nickname" class="result-nickname"></p>
+            </div>
+
+          </div>
+
+          <div class="bg-blue-50 rounded-2xl p-8 text-center border border-blue-100 mb-8">
+            <h3 class="text-xl font-bold text-gray-800 mb-2">우리의 성향 일치도</h3>
+            <div class="text-5xl font-bold text-blue-600 mb-4" id="compatibility-score">0%</div>
+            <p id="compatibility-message" class="text-lg text-gray-700">결과를 분석하고 있습니다...</p>
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 mb-8">
+            <h3 class="text-xl font-bold mb-6 flex items-center gap-2 text-gray-800">
+              📊 성향 상세 비교
+            </h3>
+            <div id="dimension-bars" class="space-y-6">
+              </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+            <div class="space-y-6">
+              <div id="parent-advice">
+                </div>
+            </div>
+            <div class="space-y-6">
+              <div class="bg-white rounded-xl shadow p-6 border border-gray-100">
+                <h4 class="font-bold text-gray-800 mb-3">아이의 숨겨진 특징</h4>
+                <div id="child-traits"></div>
               </div>
             </div>
           </div>
+
+          <div class="flex flex-col sm:flex-row justify-center gap-4 pb-10">
+            <button id="btn-share" class="px-8 py-3 bg-indigo-600 text-white rounded-full font-bold shadow-lg hover:bg-indigo-700 transition flex items-center justify-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+              결과 공유하기
+            </button>
+            <button onclick="location.reload()" class="px-8 py-3 bg-white text-gray-700 border border-gray-300 rounded-full font-bold hover:bg-gray-50 transition flex items-center justify-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+              처음부터 다시하기
+            </button>
+          </div>
+
+        </div>
+      </section>
     </main>
 
     <footer class="footer">
