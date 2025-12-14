@@ -3,11 +3,19 @@ const App = {
     parentMbti: null,
     childMbti: null,
     childAge: null,
+    parentResult: null, // 초기 상태에 명시
+    childResult: null,  // 초기 상태에 명시
     language: 'ko',
     theme: 'light'
   },
   
   init() {
+    // [안전 장치] 데이터 파일이 로드되지 않았으면 실행 중단 (콘솔 에러 방지)
+    if (typeof animalNames === 'undefined' || typeof mbtiTypes === 'undefined') {
+      console.error("❌ mbti-data.js가 로드되지 않았습니다. 스크립트 순서를 확인하세요.");
+      return;
+    }
+
     this.loadSavedSettings();
     this.bindEvents();
     this.renderMbtiGrid('parent-mbti-grid', 'parent');
@@ -118,6 +126,9 @@ const App = {
     
     if (type === 'parent') {
       this.state.parentMbti = mbti;
+      // [수정] 직접 선택 시 기존 결과 객체 초기화 (버그 방지)
+      this.state.parentResult = null; 
+      
       const label = document.getElementById('selected-parent-mbti');
       if(label) {
           label.textContent = mbti;
@@ -130,6 +141,9 @@ const App = {
       if(confirmBtn) confirmBtn.disabled = false;
     } else {
       this.state.childMbti = mbti;
+      // [수정] 직접 선택 시 기존 결과 객체 초기화
+      this.state.childResult = null;
+      
       const label = document.getElementById('selected-child-mbti');
       if(label) {
           label.textContent = mbti;
@@ -202,9 +216,13 @@ const App = {
   },
   
   restart() {
+    // [핵심 수정] 텍스트뿐만 아니라 결과 객체(Result)까지 싹 비워야 합니다.
     this.state.parentMbti = null;
     this.state.childMbti = null;
     this.state.childAge = null;
+    this.state.parentResult = null; // 여기 추가됨
+    this.state.childResult = null;  // 여기 추가됨
+
     document.querySelectorAll('.mbti-btn.selected').forEach(b => b.classList.remove('selected'));
     
     const pSelected = document.getElementById('selected-parent-mbti');
