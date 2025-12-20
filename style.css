@@ -1,4 +1,4 @@
-/* CSS Variables & Theme */
+ㄹ/* CSS Variables & Theme */
 :root {
   --font-sans: 'Inter', system-ui, sans-serif;
   --radius: 0.75rem;
@@ -216,7 +216,7 @@ main {
 
 /* Hero */
 .hero {
-  padding: 5rem 1rem 4rem;
+  padding: 2rem 1rem 4rem;
   text-align: center;
 }
 
