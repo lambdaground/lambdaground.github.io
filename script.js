@@ -1,3 +1,121 @@
+// --- Supabase 설정 ---
+// ⚠️ 1단계에서 복사한 본인의 값을 여기에 넣으세요
+const SUPABASE_URL = 'https://https://rhiaahzaftsfnbaywcby.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_iDFJ6pJRKCbwaE1SQleLMg_mOHD8Q4z';
+
+// Supabase 클라이언트 초기화
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// --- 방명록 로직 ---
+const guestbookForm = document.getElementById('guestbook-form');
+const guestbookList = document.getElementById('guestbook-list');
+
+document.addEventListener('DOMContentLoaded', () => {
+    // 기존 페이지 로직들...
+    
+    // 방명록 데이터 불러오기
+    loadGuestbook();
+});
+
+// 1. 방명록 쓰기 (Insert)
+if (guestbookForm) {
+    guestbookForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const nameInput = document.getElementById('gb-name');
+        const msgInput = document.getElementById('gb-message');
+        const btn = guestbookForm.querySelector('button');
+
+        // 버튼 비활성화 (중복 전송 방지)
+        btn.disabled = true;
+        btn.innerText = '저장 중...';
+
+        try {
+            const { error } = await sb
+                .from('guestbook')
+                .insert({
+                    name: nameInput.value,
+                    message: msgInput.value
+                });
+
+            if (error) throw error;
+
+            // 성공 시 폼 초기화 및 목록 갱신
+            guestbookForm.reset();
+            loadGuestbook(); 
+            
+        } catch (err) {
+            console.error('Error:', err);
+            alert('글 저장에 실패했습니다.');
+        } finally {
+            btn.disabled = false;
+            btn.innerText = 'Post Message';
+        }
+    });
+}
+
+// 2. 방명록 읽기 (Select)
+async function loadGuestbook() {
+    if (!guestbookList) return;
+
+    try {
+        // 최신순으로 데이터 가져오기
+        const { data, error } = await sb
+            .from('guestbook')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        // 화면 그리기
+        renderEntries(data);
+
+    } catch (err) {
+        console.error('불러오기 실패:', err);
+        guestbookList.innerHTML = `<p class="text-muted">글을 불러오지 못했습니다.</p>`;
+    }
+}
+
+// 3. 화면 렌더링
+function renderEntries(entries) {
+    guestbookList.innerHTML = '';
+
+    if (!entries || entries.length === 0) {
+        guestbookList.innerHTML = `
+            <div class="empty-state text-center text-muted">
+                <p>아직 작성된 방명록이 없습니다. 첫 번째 글을 남겨보세요!</p>
+            </div>`;
+        return;
+    }
+
+    entries.forEach(entry => {
+        const dateStr = new Date(entry.created_at).toLocaleString();
+        
+        const div = document.createElement('div');
+        div.className = 'guestbook-item';
+        div.innerHTML = `
+            <div class="guestbook-header">
+                <span class="gb-author">${escapeHtml(entry.name)}</span>
+                <span class="gb-date">${dateStr}</span>
+            </div>
+            <p class="gb-content">${escapeHtml(entry.message)}</p>
+        `;
+        guestbookList.appendChild(div);
+    });
+}
+
+// XSS 방지용 함수
+function escapeHtml(text) {
+    if (!text) return "";
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
 // Translations
 const translations = {
   en: {
