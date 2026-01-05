@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
   <title>Lambda Ground - Engineering & Insight</title>
-  <meta name="description" content="A central hub for independent web applications including MBTI compatibility, Economic dashboards, and Engineering tools." />
+  <meta name="description" content="A central hub for independent web applications including Engineering tools and Economic dashboards." />
   <meta property="og:title" content="Lambda Ground" />
   <meta property="og:description" content="A central hub for independent web applications." />
   <meta property="og:type" content="website" />
@@ -19,25 +19,24 @@
 </head>
 <body>
   <div id="app">
-    <!-- Header -->
     <header class="header">
       <div class="container header-content">
         <a href="#" class="logo" data-page="home">
           <span class="logo-lambda">Lambda</span><span class="logo-ground">Ground</span>
         </a>
         <nav class="nav-desktop">
-  <a href="#" class="nav-link active" data-page="home" data-i18n="nav.home">Home</a>
-  
-  <a href="#" class="nav-link" data-page="guestbook" data-i18n="nav.guestbook">Guestbook</a>
-  
-  <a href="#" class="nav-link" data-page="contact" data-i18n="nav.contact">Contact</a>
-  <div class="nav-divider"></div>
+          <a href="#" class="nav-link active" data-page="home" data-i18n="nav.home">Home</a>
+          <a href="#" class="nav-link" data-page="about" data-i18n="nav.about">About</a>
+          <a href="#" class="nav-link" data-page="guestbook" data-i18n="nav.guestbook">Guestbook</a>
+          <a href="#" class="nav-link" data-page="contact" data-i18n="nav.contact">Contact</a>
+          <div class="nav-divider"></div>
           <button class="icon-btn" id="theme-toggle" title="Toggle Theme">
             <svg id="icon-sun" class="icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
             <svg id="icon-moon" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
           </button>
           <button class="icon-btn" id="lang-toggle" title="Switch Language">🇰🇷</button>
         </nav>
+        
         <div class="nav-mobile">
           <button class="icon-btn" id="theme-toggle-mobile" title="Toggle Theme">
             <svg id="icon-sun-mobile" class="icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
@@ -51,20 +50,17 @@
       </div>
     </header>
 
-    <!-- Mobile Menu -->
     <div class="mobile-menu hidden" id="mobile-menu">
-  <div class="mobile-menu-content">
-    <a href="#" class="mobile-nav-link" data-page="home" data-i18n="nav.home">Home</a>
-    
-    <a href="#" class="mobile-nav-link" data-page="guestbook" data-i18n="nav.guestbook">Guestbook</a>
-    
-    <a href="#" class="mobile-nav-link" data-page="contact" data-i18n="nav.contact">Contact</a>
-  </div>
-</div>
+      <div class="mobile-menu-content">
+        <a href="#" class="mobile-nav-link" data-page="home" data-i18n="nav.home">Home</a>
+        <a href="#" class="mobile-nav-link" data-page="about" data-i18n="nav.about">About</a>
+        <a href="#" class="mobile-nav-link" data-page="guestbook" data-i18n="nav.guestbook">Guestbook</a>
+        <a href="#" class="mobile-nav-link" data-page="contact" data-i18n="nav.contact">Contact</a>
+      </div>
+    </div>
 
-    <!-- Main Content -->
     <main id="main-content">
-      <!-- Home Page -->
+      
       <div id="page-home" class="page active">
         <section class="hero">
           <h1 class="hero-title">
@@ -72,9 +68,11 @@
           </h1>
           <p class="hero-subtitle" data-i18n="hero.subtitle">Playground for Everyone 🚀</p>
         </section>
+        
         <section class="container app-grid-section">
           <div class="app-grid">
-              <a href="https://moneyweather.lambdaground.com" class="app-card">
+            
+            <a href="https://moneyweather.lambdaground.com" class="app-card">
               <div class="card-icon card-icon-sun">
                 <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" fill="none"/></svg>
               </div>
@@ -82,39 +80,94 @@
               <p class="card-desc" data-i18n="app.money.desc">Your daily financial forecast.</p>
             </a>
             
-            <div class="app-grid">
-              <a href="https://circuitsim.lambdaground.com" class="app-card">
-              <div class="card-icon card-icon-sun">
-                <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" fill="none"/></svg>
+            <a href="https://circuitsim.lambdaground.com" class="app-card">
+              <div class="card-icon card-icon-cpu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg>
               </div>
-              <h3 class="card-title" data-i18n="app.money.title">Circuit Simulator</h3>
-              <p class="card-desc" data-i18n="app.money.desc">Easy circuit drawing and analysis.</p>
+              <h3 class="card-title">Circuit Simulator</h3>
+              <p class="card-desc">Easy circuit drawing and analysis.</p>
             </a>
 
-              <div class="app-grid">
-              <a href="https://circuitsim.lambdaground.com" class="app-card">
-              <div class="card-icon card-icon-sun">
-                <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" fill="none"/></svg>
+            <a href="https://microstrip.lambdaground.com" class="app-card">
+              <div class="card-icon card-icon-cpu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20M2 12l5-5M22 12l-5 5"/></svg>
               </div>
-              <h3 class="card-title" data-i18n="app.money.title">Circuit Simulator</h3>
-              <p class="card-desc" data-i18n="app.money.desc">Easy circuit drawing and analysis.</p>
+              <h3 class="card-title">Microstrip Calculator</h3>
+              <p class="card-desc">Design for RF transmission lines.</p>
             </a>
 
-              <div class="app-grid">
-              <a href="https://microstrip.lambdaground.com" class="app-card">
-              <div class="card-icon card-icon-sun">
-                <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" fill="none"/></svg>
+            <a href="https://rfcirsim.lambdaground.com" class="app-card">
+              <div class="card-icon card-icon-cpu">
+                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
               </div>
-              <h3 class="card-title" data-i18n="app.money.title">Microstrip Line Calcuator</h3>
-              <p class="card-desc" data-i18n="app.money.desc">Design for RF transmission lines.</p>
+              <h3 class="card-title">RF CirSim</h3>
+              <p class="card-desc">RF Circuit Simulation Tool.</p>
             </a>
-              
-            
+
           </div>
         </section>
       </div>
 
-      <!-- Contact Page -->
+      <div id="page-about" class="page">
+        <section class="container page-container">
+          <div class="page-header">
+            <div class="page-header-icon">
+               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="40" height="40"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2v1"/><path d="M4.22 4.22l.71.71"/><path d="M19.07 4.93l.71-.71"/><path d="M12 6a7 7 0 0 1 7 7c0 2.21-1.34 4.14-3.36 5H8.36A7 7 0 0 1 12 6z"/></svg>
+            </div>
+            <h1 data-i18n="about.title">About Lambda Ground</h1>
+          </div>
+
+          <article class="prose">
+            <p class="lead" data-i18n="about.intro">
+              Lambda Ground is a specialized web platform designed for engineers, researchers, and data enthusiasts. We provide web-based simulation tools and real-time data analysis dashboards.
+            </p>
+
+            <div class="highlight-box">
+              <h3 style="margin-top:0;">Our Mission</h3>
+              <p>
+                To simplify complex engineering calculations and make technical insights accessible directly from the browser, without the need for heavy software installations.
+              </p>
+            </div>
+
+            <h3>Core Focus Areas</h3>
+            <ul class="about-list">
+              <li class="about-item">
+                <span class="about-badge">ENG</span>
+                <div>
+                  <strong>Electronics & RF Engineering</strong>
+                  <p class="text-muted">
+                    Tools for Microstrip line impedance, Coil inductance calculation, and Circuit simulation suitable for Power Electronics and RF design.
+                  </p>
+                </div>
+              </li>
+              <li class="about-item">
+                <span class="about-badge data">DATA</span>
+                <div>
+                  <strong>Economic Intelligence</strong>
+                  <p class="text-muted">
+                    'Money Weather' dashboard provides visualization of key economic indicators to help users understand market trends at a glance.
+                  </p>
+                </div>
+              </li>
+            </ul>
+
+            <hr style="margin: 2rem 0; border-color: var(--border);">
+
+            <h3>Technology Stack</h3>
+            <p class="text-muted">
+              Built with modern web standards for performance and reliability.
+            </p>
+            <div class="tech-stack">
+              <span class="tech-tag">HTML5 & CSS3</span>
+              <span class="tech-tag">Vanilla JavaScript</span>
+              <span class="tech-tag">Canvas API</span>
+              <span class="tech-tag">Supabase</span>
+            </div>
+
+          </article>
+        </section>
+      </div>
+
       <div id="page-contact" class="page">
         <section class="container page-container">
           <div class="form-card">
@@ -145,36 +198,35 @@
       </div>
 
       <div id="page-guestbook" class="page">
-  <section class="container page-container">
-    <div class="page-header">
-      <div class="page-header-icon">🖊️</div>
-      <h1>Guestbook</h1>
-    </div>
-    <p class="text-muted mb-8">Lambda Ground에 방문해주셔서 감사합니다. 자유롭게 방명록을 남겨주세요!</p>
+        <section class="container page-container">
+          <div class="page-header">
+            <div class="page-header-icon">🖊️</div>
+            <h1>Guestbook</h1>
+          </div>
+          <p class="text-muted mb-8">Lambda Ground에 방문해주셔서 감사합니다. 자유롭게 방명록을 남겨주세요!</p>
 
-    <div class="form-card mb-8">
-      <form id="guestbook-form">
-        <div class="form-group">
-          <label>Name</label>
-          <input type="text" id="gb-name" required placeholder="Nickname" />
-        </div>
-        <div class="form-group">
-          <label>Message</label>
-          <textarea id="gb-message" required placeholder="Leave a message..." rows="3"></textarea>
-        </div>
-        <button type="submit" class="btn-primary">Post Message</button>
-      </form>
-    </div>
+          <div class="form-card mb-8">
+            <form id="guestbook-form">
+              <div class="form-group">
+                <label>Name</label>
+                <input type="text" id="gb-name" required placeholder="Nickname" />
+              </div>
+              <div class="form-group">
+                <label>Message</label>
+                <textarea id="gb-message" required placeholder="Leave a message..." rows="3"></textarea>
+              </div>
+              <button type="submit" class="btn-primary">Post Message</button>
+            </form>
+          </div>
 
-    <div id="guestbook-list" class="guestbook-list">
-      <div class="empty-state text-center text-muted">
-        <p>Loading...</p>
+          <div id="guestbook-list" class="guestbook-list">
+            <div class="empty-state text-center text-muted">
+              <p>Loading...</p>
+            </div>
+          </div>
+        </section>
       </div>
-    </div>
-  </section>
-</div>
 
-      <!-- Privacy Page -->
       <div id="page-privacy" class="page">
         <section class="container page-container">
           <a href="#" class="back-link" data-page="home">
@@ -190,73 +242,4 @@
             <h3 data-i18n="privacy.section1.title">1. Information We Collect</h3>
             <p data-i18n="privacy.section1.content">We collect information that you provide directly to us, such as when you create an account, update your profile, or communicate with us.</p>
             <h3 data-i18n="privacy.section2.title">2. How We Use Your Information</h3>
-            <p data-i18n="privacy.section2.content">We use the information we collect to operate, maintain, and provide you with the features and functionality of the Service.</p>
-            <h3 data-i18n="privacy.section3.title">3. Data Security</h3>
-            <p data-i18n="privacy.section3.content">We implement appropriate technical and organizational measures to protect the security of your personal information.</p>
-            <h3 data-i18n="privacy.section4.title">4. Contact Us</h3>
-            <p><span data-i18n="privacy.section4.content">If you have any questions about this Privacy Policy, please contact us at:</span> <a href="mailto:lambdaground@gmail.com">lambdaground@gmail.com</a></p>
-          </article>
-        </section>
-      </div>
-
-      <!-- MBTI Page -->
-      <div id="page-mbti" class="page">
-        <section class="container page-container text-center">
-          <div class="placeholder-icon">🧩</div>
-          <h1 data-i18n="app.mbti.title">MBTI Compatibility</h1>
-          <p class="text-muted" data-i18n="app.mbti.desc">Check compatibility with parent & child animal mascots.</p>
-          <div class="placeholder-card">
-            <h3>Compatibility Check</h3>
-            <p>Select Parent Type vs Child Type logic would go here.</p>
-          </div>
-        </section>
-      </div>
-
-      <!-- Engineering Page -->
-      <div id="page-engineering" class="page">
-  <section class="container page-container">
-    <div class="page-header">
-      <div class="page-header-icon card-icon-cpu">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg>
-      </div>
-      <h1 data-i18n="app.engineering.title">Engineering Tools</h1>
-    </div>
-    <p class="text-muted mb-8">This collection of engineering tools is currently being integrated into the portal.</p>
-    
-    <div class="tool-list">
-      <a href="https://microstrip.lambdaground.com" class="tool-card" target="_blank" style="text-decoration: none; color: inherit; display: block;">
-        <h4>Microstrip Line Calculator</h4>
-      </a>
-
-      <a href="https://circuitsim.lambdaground.com" class="tool-card" style="text-decoration: none; color: inherit; display: block;">
-        <h4>Circuit Simulator</h4>
-      </a>
-
-      <a href="https://rfcirsim.lambdaground.com" class="tool-card" style="text-decoration: none; color: inherit; display: block;">
-        <h4>RF CirSim</h4>
-      </a>
-
-      <a href="#" class="tool-card" style="text-decoration: none; color: inherit; display: block;">
-        <h4>Coming Soon</h4>
-      </a>
-    </div>
-  </section>
-</div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="container footer-content">
-        <p class="footer-copy">&copy; 2025 Lambda Ground. <span data-i18n="footer.rights">All rights reserved.</span></p>
-        <div class="footer-links">
-          <a href="#" data-page="privacy" data-i18n="nav.privacy">Privacy</a>
-          <a href="#" data-page="contact" data-i18n="nav.contact">Contact</a>
-        </div>
-      </div>
-    </footer>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  
-  <script src="script.js"></script>
-</body>
-</html>
+            <p data-i18n="privacy.section2.content">We use
