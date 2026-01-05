@@ -1,21 +1,654 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-  <title>Lambda Ground - Engineering & Insight</title>
-  <meta name="description" content="A central hub for independent web applications including Engineering tools and Economic dashboards." />
-  <meta property="og:title" content="Lambda Ground" />
-  <meta property="og:description" content="A central hub for independent web applications." />
-  <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:site" content="@replit" />
-  <meta name="twitter:title" content="Lambda Ground" />
-  <meta name="twitter:description" content="A central hub for independent web applications." />
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <title>Lambda Ground - Engineering &amp; Insight</title>
+  <meta name="description" content="A central hub for independent web applications including Engineering tools and Economic dashboards.">
+  <meta property="og:title" content="Lambda Ground">
+  <meta property="og:description" content="A central hub for independent web applications.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@replit">
+  <meta name="twitter:title" content="Lambda Ground">
+  <meta name="twitter:description" content="A central hub for independent web applications.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  
+<style>/* 기존 코드와 동일 (앞부분 생략 없이 전체 코드) */
+:root {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --radius: 0.75rem;
+  --background: #ffffff;
+  --foreground: #0f0f0f;
+  --card: #ffffff;
+  --card-foreground: #0f0f0f;
+  --primary: #22c55e;
+  --primary-foreground: #ffffff;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+}
+
+.dark {
+  --background: #121212;
+  --foreground: #fafafa;
+  --card: #1c1c1c;
+  --card-foreground: #fafafa;
+  --primary: #4ade80;
+  --primary-foreground: #052e16;
+  --secondary: #27272a;
+  --secondary-foreground: #fafafa;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
+  --border: #27272a;
+  --input: #27272a;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--background);
+  color: var(--foreground);
+  line-height: 1.6;
+  min-height: 100vh;
+  transition: background-color 0.3s, color 0.3s;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+main {
+  flex: 1;
+}
+
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+}
+
+/* Header */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: rgba(var(--background), 0.8);
+  background: var(--background);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(8px);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.logo-lambda {
+  color: var(--foreground);
+}
+
+.logo-ground {
+  color: var(--primary);
+}
+
+.nav-desktop {
+  display: none;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.nav-link {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  transition: color 0.2s;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: var(--primary);
+}
+
+.nav-divider {
+  width: 1px;
+  height: 1.5rem;
+  background: var(--border);
+  margin: 0 0.5rem;
+}
+
+.nav-mobile {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: none;
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
+  border-radius: 0.5rem;
+  font-size: 1.25rem;
+  transition: background-color 0.2s;
+}
+
+.icon-btn:hover {
+  background: var(--muted);
+}
+
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.icon.hidden {
+  display: none;
+}
+
+.icon-small {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Mobile Menu */
+.mobile-menu {
+  position: fixed;
+  top: 4rem;
+  right: 0;
+  width: 100%;
+  max-width: 300px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0 0 0 var(--radius);
+  z-index: 40;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.mobile-menu.hidden {
+  display: none;
+}
+
+.mobile-menu-content {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.mobile-nav-link {
+  font-size: 1.125rem;
+  font-weight: 500;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.mobile-nav-link:hover {
+  background: var(--muted);
+}
+
+/* Hero */
+.hero {
+  padding: 2rem 1rem 4rem;
+  text-align: center;
+}
+
+.hero-title {
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  margin-bottom: 1rem;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: var(--muted-foreground);
+  font-weight: 500;
+}
+
+.text-foreground {
+  color: var(--foreground);
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+/* App Grid */
+.app-grid-section {
+  padding-bottom: 8rem;
+}
+
+.app-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.app-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  min-height: 16rem;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.app-card:hover {
+  background: var(--muted);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.app-card:hover .card-title {
+  color: var(--primary);
+}
+
+.card-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.card-icon-sun {
+  color: #f59e0b;
+}
+
+.card-icon-sun svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.card-icon-cpu {
+  color: #3b82f6;
+}
+
+.card-icon-cpu svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--foreground);
+  transition: color 0.3s;
+}
+
+.card-desc {
+  color: var(--muted-foreground);
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Footer */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem 0;
+  background: var(--background);
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.footer-copy {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+
+.footer-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.footer-links a {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  transition: color 0.2s;
+}
+
+.footer-links a:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+/* Page Container */
+.page-container {
+  padding: 4rem 1rem;
+  max-width: 768px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Form Styles */
+.form-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+}
+
+.form-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.form-subtitle {
+  color: var(--muted-foreground);
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--background);
+  border: 1px solid var(--input);
+  border-radius: 0.5rem;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--foreground);
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border: none;
+  border-radius: 0.5rem;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+/* Back Link */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted-foreground);
+  margin-bottom: 2rem;
+  transition: color 0.2s, padding-left 0.2s;
+}
+
+.back-link:hover {
+  color: var(--foreground);
+  padding-left: 0.5rem;
+}
+
+/* Prose / Article */
+.prose {
+  max-width: 65ch;
+}
+
+.prose h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.prose h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose p {
+  margin-bottom: 1rem;
+  color: var(--muted-foreground);
+}
+
+.prose .lead {
+  font-size: 1.125rem;
+  color: var(--muted-foreground);
+}
+
+.prose a {
+  color: var(--primary);
+}
+
+.prose a:hover {
+  text-decoration: underline;
+}
+
+.highlight-box {
+  background: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin: 2rem 0;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.page-header-icon {
+  width: 4rem;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-header-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
+.guestbook-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.guestbook-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 1rem;
+  border-radius: var(--radius);
+}
+
+.guestbook-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.gb-author {
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.gb-date {
+  color: var(--muted-foreground);
+}
+
+.gb-content {
+  color: var(--muted-foreground);
+  line-height: 1.5;
+}
+
+/* About Page Styles */
+.about-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.about-item {
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.about-badge {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+.about-badge.data {
+  background: #10b981; /* Success color for Data */
+}
+
+.about-item p {
+  margin: 0.2rem 0;
+  font-size: 0.95rem;
+}
+
+.tech-stack {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.tech-tag {
+  border: 1px solid var(--border);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  color: var(--muted-foreground);
+  background: var(--card);
+}
+
+@media (min-width: 768px) {
+  .nav-desktop {
+    display: flex;
+  }
+  
+  .nav-mobile {
+    display: none;
+  }
+  
+  .hero-title {
+    font-size: 4.5rem;
+  }
+  
+  .app-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .footer-content {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
   <div id="app">
@@ -31,20 +664,20 @@
           <a href="#" class="nav-link" data-page="contact" data-i18n="nav.contact">Contact</a>
           <div class="nav-divider"></div>
           <button class="icon-btn" id="theme-toggle" title="Toggle Theme">
-            <svg id="icon-sun" class="icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-            <svg id="icon-moon" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <svg id="icon-sun" class="icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+            <svg id="icon-moon" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
           </button>
           <button class="icon-btn" id="lang-toggle" title="Switch Language">🇰🇷</button>
         </nav>
         
         <div class="nav-mobile">
           <button class="icon-btn" id="theme-toggle-mobile" title="Toggle Theme">
-            <svg id="icon-sun-mobile" class="icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-            <svg id="icon-moon-mobile" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <svg id="icon-sun-mobile" class="icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+            <svg id="icon-moon-mobile" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
           </button>
           <button class="icon-btn" id="lang-toggle-mobile" title="Switch Language">🇰🇷</button>
           <button class="icon-btn" id="menu-toggle">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
           </button>
         </div>
       </div>
@@ -74,7 +707,7 @@
             
             <a href="https://moneyweather.lambdaground.com" class="app-card">
               <div class="card-icon card-icon-sun">
-                <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" fill="none"/></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" fill="none"></path></svg>
               </div>
               <h3 class="card-title" data-i18n="app.money.title">Money Weather</h3>
               <p class="card-desc" data-i18n="app.money.desc">Your daily financial forecast.</p>
@@ -82,7 +715,7 @@
             
             <a href="https://circuitsim.lambdaground.com" class="app-card">
               <div class="card-icon card-icon-cpu">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"></rect><rect x="9" y="9" width="6" height="6"></rect><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"></path></svg>
               </div>
               <h3 class="card-title">Circuit Simulator</h3>
               <p class="card-desc">Easy circuit drawing and analysis.</p>
@@ -90,7 +723,7 @@
 
             <a href="https://microstrip.lambdaground.com" class="app-card">
               <div class="card-icon card-icon-cpu">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20M2 12l5-5M22 12l-5 5"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20M2 12l5-5M22 12l-5 5"></path></svg>
               </div>
               <h3 class="card-title">Microstrip Calculator</h3>
               <p class="card-desc">Design for RF transmission lines.</p>
@@ -112,7 +745,7 @@
         <section class="container page-container">
           <div class="page-header">
             <div class="page-header-icon">
-               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="40" height="40"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2v1"/><path d="M4.22 4.22l.71.71"/><path d="M19.07 4.93l.71-.71"/><path d="M12 6a7 7 0 0 1 7 7c0 2.21-1.34 4.14-3.36 5H8.36A7 7 0 0 1 12 6z"/></svg>
+               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="40" height="40"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M12 2v1"></path><path d="M4.22 4.22l.71.71"></path><path d="M19.07 4.93l.71-.71"></path><path d="M12 6a7 7 0 0 1 7 7c0 2.21-1.34 4.14-3.36 5H8.36A7 7 0 0 1 12 6z"></path></svg>
             </div>
             <h1 data-i18n="about.title">About Lambda Ground</h1>
           </div>
@@ -134,7 +767,7 @@
               <li class="about-item">
                 <span class="about-badge">ENG</span>
                 <div>
-                  <strong>Electronics & RF Engineering</strong>
+                  <strong>Electronics &amp; RF Engineering</strong>
                   <p class="text-muted">
                     Tools for Microstrip line impedance, Coil inductance calculation, and Circuit simulation suitable for Power Electronics and RF design.
                   </p>
@@ -158,7 +791,7 @@
               Built with modern web standards for performance and reliability.
             </p>
             <div class="tech-stack">
-              <span class="tech-tag">HTML5 & CSS3</span>
+              <span class="tech-tag">HTML5 &amp; CSS3</span>
               <span class="tech-tag">Vanilla JavaScript</span>
               <span class="tech-tag">Canvas API</span>
               <span class="tech-tag">Supabase</span>
@@ -174,22 +807,22 @@
             <h2 class="form-title" data-i18n="contact.title">Contact Us</h2>
             <p class="form-subtitle">We'd love to hear from you. Send us a message below.</p>
             <form id="contact-form" name="contact" method="POST" data-netlify="true">
-              <input type="hidden" name="form-name" value="contact" />
+              <input type="hidden" name="form-name" value="contact">
               <div class="form-group">
                 <label data-i18n="contact.name">Name</label>
-                <input type="text" name="name" required placeholder="John Doe" />
+                <input type="text" name="name" required="" placeholder="John Doe">
               </div>
               <div class="form-group">
                 <label data-i18n="contact.email">Email</label>
-                <input type="email" name="email" required placeholder="john@example.com" />
+                <input type="email" name="email" required="" placeholder="john@example.com">
               </div>
               <div class="form-group">
                 <label data-i18n="contact.subject">Subject</label>
-                <input type="text" name="subject" required placeholder="Inquiry about..." />
+                <input type="text" name="subject" required="" placeholder="Inquiry about...">
               </div>
               <div class="form-group">
                 <label data-i18n="contact.message">Message</label>
-                <textarea name="message" required placeholder="Your message here..." rows="5"></textarea>
+                <textarea name="message" required="" placeholder="Your message here..." rows="5"></textarea>
               </div>
               <button type="submit" class="btn-primary" data-i18n="contact.send">Send Message</button>
             </form>
@@ -209,11 +842,11 @@
             <form id="guestbook-form">
               <div class="form-group">
                 <label>Name</label>
-                <input type="text" id="gb-name" required placeholder="Nickname" />
+                <input type="text" id="gb-name" required="" placeholder="Nickname">
               </div>
               <div class="form-group">
                 <label>Message</label>
-                <textarea id="gb-message" required placeholder="Leave a message..." rows="3"></textarea>
+                <textarea id="gb-message" required="" placeholder="Leave a message..." rows="3"></textarea>
               </div>
               <button type="submit" class="btn-primary">Post Message</button>
             </form>
@@ -230,7 +863,7 @@
       <div id="page-privacy" class="page">
         <section class="container page-container">
           <a href="#" class="back-link" data-page="home">
-            <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg>
             <span data-i18n="privacy.back">Back to Home</span>
           </a>
           <article class="prose">
@@ -242,4 +875,314 @@
             <h3 data-i18n="privacy.section1.title">1. Information We Collect</h3>
             <p data-i18n="privacy.section1.content">We collect information that you provide directly to us, such as when you create an account, update your profile, or communicate with us.</p>
             <h3 data-i18n="privacy.section2.title">2. How We Use Your Information</h3>
-            <p data-i18n="privacy.section2.content">We use
+            <p data-i18n="privacy.section2.content">We use</p></article></section></div></main></div><script>// ==========================================
+// 1. Supabase 설정 (본인 키로 변경 필수!)
+// ==========================================
+const SUPABASE_URL = 'https://rhiaahzaftsfnbaywcby.supabase.co'; 
+const SUPABASE_KEY = 'sb_publishable_iDFJ6pJRKCbwaE1SQleLMg_mOHD8Q4z';
+
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ==========================================
+// 2. Translations (다국어 설정)
+// ==========================================
+const translations = {
+  en: {
+    "nav.home": "Home",
+    "nav.contact": "Contact",
+    "nav.guestbook": "Guestbook",
+    "nav.about": "About",
+    "nav.privacy": "Privacy",
+    "hero.subtitle": "Where Code Becomes Play 🚀",
+    "app.lotto.title": "Lotto Pick",
+    "app.lotto.desc": "Get your lucky numbers for today. Data-driven Lotto Numbers!",
+    "app.money.title": "Money Weather",
+    "app.money.desc": "Your daily financial forecast.",
+    "app.mbti.title": "MBTI Compatibility",
+    "app.mbti.desc": "Check compatibility with parent & child animal mascots.",
+    "app.engineering.title": "Engineering Tools",
+    "app.engineering.desc": "RF Transmission, Magnetic Core, Radio Wave, and Coil calculations.",
+    "about.title": "About Lambda Ground",
+    "about.intro": "Lambda Ground is a specialized web platform designed for engineers, researchers, and data enthusiasts. We provide web-based simulation tools and real-time data analysis dashboards.",
+    "footer.rights": "All rights reserved.",
+    "contact.title": "Contact Us",
+    "contact.name": "Name",
+    "contact.email": "Email",
+    "contact.subject": "Subject",
+    "contact.message": "Message",
+    "contact.send": "Send Message",
+    "privacy.title": "Privacy Policy",
+    "privacy.back": "Back to Home",
+    "privacy.last_updated": "Last updated: December 14, 2025",
+    "privacy.content": "This is a standard privacy policy placeholder.",
+    "privacy.section1.title": "1. Information We Collect",
+    "privacy.section1.content": "We collect information that you provide directly to us.",
+    "privacy.section2.title": "2. How We Use Your Information",
+    "privacy.section2.content": "We use the information we collect to operate the Service.",
+    "privacy.section3.title": "3. Data Security",
+    "privacy.section3.content": "We implement appropriate measures to protect your information.",
+    "privacy.section4.title": "4. Contact Us",
+    "privacy.section4.content": "If you have any questions, please contact us at:"
+  },
+  ko: {
+    "nav.home": "홈",
+    "nav.contact": "문의하기",
+    "nav.guestbook": "방명록",
+    "nav.about": "소개",
+    "nav.privacy": "개인정보처리방침",
+    "hero.subtitle": "모두의 놀이터 🚀",
+    "app.lotto.title": "Lotto Pick",
+    "app.lotto.desc": "오늘의 행운 번호를 뽑아보세요. 통계 기반 로또 번호 생성!",
+    "app.money.title": "Money Weather",
+    "app.money.desc": "오늘의 경제 날씨를 확인하세요.",
+    "app.mbti.title": "MBTI 궁합",
+    "app.mbti.desc": "부모와 아이 동물 마스코트로 확인하는 성격 궁합.",
+    "app.engineering.title": "공학 도구 모음",
+    "app.engineering.desc": "RF 전송선로, 자성 코어, 전파, 코일 계산 등 다양한 공학 앱.",
+    "about.title": "서비스 소개",
+    "about.intro": "Lambda Ground는 엔지니어와 연구자를 위한 전문 웹 플랫폼입니다. 웹 기반 시뮬레이션 도구와 데이터 분석 대시보드를 제공합니다.",
+    "footer.rights": "모든 권리 보유.",
+    "contact.title": "문의하기",
+    "contact.name": "이름",
+    "contact.email": "이메일",
+    "contact.subject": "제목",
+    "contact.message": "메시지",
+    "contact.send": "메시지 보내기",
+    "privacy.title": "개인정보처리방침",
+    "privacy.back": "홈으로 돌아가기",
+    "privacy.last_updated": "최종 업데이트: 2025년 12월 14일",
+    "privacy.content": "표준 개인정보처리방침 예시입니다.",
+    "privacy.section1.title": "1. 수집하는 정보",
+    "privacy.section1.content": "귀하가 직접 제공하는 정보를 수집합니다.",
+    "privacy.section2.title": "2. 정보 사용 방법",
+    "privacy.section2.content": "수집한 정보는 서비스 운영에 사용됩니다.",
+    "privacy.section3.title": "3. 데이터 보안",
+    "privacy.section3.content": "개인 정보를 보호하기 위해 적절한 조치를 시행합니다.",
+    "privacy.section4.title": "4. 문의하기",
+    "privacy.section4.content": "궁금한 점이 있으시면 다음으로 문의해 주십시오:"
+  }
+};
+
+// ==========================================
+// 3. State & Initialization
+// ==========================================
+let currentLanguage = localStorage.getItem('language') || 'en';
+let currentTheme = localStorage.getItem('theme') || 'dark';
+let currentPage = 'home';
+
+document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
+  initLanguage();
+  initNavigation();
+  initMobileMenu();
+  initContactForm();
+  loadGuestbook();
+});
+
+// ==========================================
+// 4. Guestbook Logic (Supabase Version)
+// ==========================================
+const guestbookForm = document.getElementById('guestbook-form');
+const guestbookList = document.getElementById('guestbook-list');
+
+if (guestbookForm) {
+  guestbookForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const nameInput = document.getElementById('gb-name');
+    const msgInput = document.getElementById('gb-message');
+    const btn = guestbookForm.querySelector('button');
+
+    btn.disabled = true;
+    btn.innerText = 'Sending...';
+
+    try {
+      const { error } = await sb
+        .from('guestbook')
+        .insert({
+          name: nameInput.value,
+          message: msgInput.value
+        });
+      if (error) throw error;
+      guestbookForm.reset();
+      loadGuestbook();
+    } catch (err) {
+      console.error('Error:', err);
+      alert('Failed to post message. Please try again.');
+    } finally {
+      btn.disabled = false;
+      btn.innerText = 'Post Message';
+    }
+  });
+}
+
+async function loadGuestbook() {
+  if (!guestbookList) return;
+  try {
+    const { data, error } = await sb
+      .from('guestbook')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    renderEntries(data);
+  } catch (err) {
+    console.error('Load Error:', err);
+    guestbookList.innerHTML = `<p class="text-muted">Failed to load messages.</p>`;
+  }
+}
+
+function renderEntries(entries) {
+  guestbookList.innerHTML = '';
+  if (!entries || entries.length === 0) {
+    guestbookList.innerHTML = `
+      <div class="empty-state text-center text-muted">
+        <p>No messages yet. Be the first to leave one!</p>
+      </div>`;
+    return;
+  }
+  entries.forEach(entry => {
+    const dateStr = new Date(entry.created_at).toLocaleString();
+    const div = document.createElement('div');
+    div.className = 'guestbook-item';
+    div.innerHTML = `
+      <div class="guestbook-header">
+        <span class="gb-author">${escapeHtml(entry.name)}</span>
+        <span class="gb-date">${dateStr}</span>
+      </div>
+      <p class="gb-content">${escapeHtml(entry.message)}</p>
+    `;
+    guestbookList.appendChild(div);
+  });
+}
+
+function escapeHtml(text) {
+  if (!text) return "";
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+// ==========================================
+// 5. General UI Functions
+// ==========================================
+function initTheme() {
+  if (currentTheme === 'dark') {
+    document.body.classList.add('dark');
+  }
+  updateThemeIcons();
+}
+
+function toggleTheme() {
+  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('theme', currentTheme);
+  document.body.classList.toggle('dark');
+  updateThemeIcons();
+}
+
+function updateThemeIcons() {
+  const sunIcons = document.querySelectorAll('#icon-sun, #icon-sun-mobile');
+  const moonIcons = document.querySelectorAll('#icon-moon, #icon-moon-mobile');
+  if (currentTheme === 'dark') {
+    sunIcons.forEach(icon => icon.classList.remove('hidden'));
+    moonIcons.forEach(icon => icon.classList.add('hidden'));
+  } else {
+    sunIcons.forEach(icon => icon.classList.add('hidden'));
+    moonIcons.forEach(icon => icon.classList.remove('hidden'));
+  }
+}
+
+function initLanguage() {
+  updateLanguageUI();
+  updateAllTranslations();
+}
+
+function toggleLanguage() {
+  currentLanguage = currentLanguage === 'en' ? 'ko' : 'en';
+  localStorage.setItem('language', currentLanguage);
+  updateLanguageUI();
+  updateAllTranslations();
+}
+
+function updateLanguageUI() {
+  const langButtons = document.querySelectorAll('#lang-toggle, #lang-toggle-mobile');
+  langButtons.forEach(btn => {
+    btn.textContent = currentLanguage === 'en' ? '🇰🇷' : '🇺🇸';
+  });
+}
+
+function updateAllTranslations() {
+  const elements = document.querySelectorAll('[data-i18n]');
+  elements.forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (translations[currentLanguage][key]) {
+      el.textContent = translations[currentLanguage][key];
+    }
+  });
+}
+
+function initNavigation() {
+  document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+  document.getElementById('theme-toggle-mobile').addEventListener('click', toggleTheme);
+  document.getElementById('lang-toggle').addEventListener('click', toggleLanguage);
+  document.getElementById('lang-toggle-mobile').addEventListener('click', toggleLanguage);
+  document.querySelectorAll('[data-page]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const page = link.getAttribute('data-page');
+      navigateToPage(page);
+      closeMobileMenu();
+    });
+  });
+}
+
+function navigateToPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const targetPage = document.getElementById(`page-${page}`);
+  if (targetPage) {
+    targetPage.classList.add('active');
+    currentPage = page;
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('data-page') === page) {
+        link.classList.add('active');
+      }
+    });
+    window.scrollTo(0, 0);
+  }
+}
+
+function initMobileMenu() {
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  if(menuToggle && mobileMenu) {
+    menuToggle.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+    document.addEventListener('click', (e) => {
+      if (!mobileMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+        mobileMenu.classList.add('hidden');
+      }
+    });
+  }
+}
+
+function closeMobileMenu() {
+  const menu = document.getElementById('mobile-menu');
+  if(menu) menu.classList.add('hidden');
+}
+
+function initContactForm() {
+  const form = document.getElementById('contact-form');
+  if(form) {
+      form.addEventListener('submit', (e) => {
+        if (!window.location.hostname.includes('netlify')) {
+          e.preventDefault();
+          alert('Message sent! (Demo mode)');
+          form.reset();
+        }
+      });
+  }
+}</script></body></html>
