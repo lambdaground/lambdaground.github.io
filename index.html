@@ -1,24 +1,37 @@
 <!DOCTYPE html>
-<html lang="en"><head>
+<html lang="en">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
   <title>Lambda Ground - Engineering &amp; Insight</title>
   <meta name="description" content="A central hub for independent web applications including Engineering tools and Economic dashboards.">
-  <meta property="og:title" content="Lambda Ground">
-  <meta property="og:description" content="A central hub for independent web applications.">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:site" content="@replit">
-  <meta name="twitter:title" content="Lambda Ground">
-  <meta name="twitter:description" content="A central hub for independent web applications.">
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
   
-<style>/* 기존 코드와 동일 (앞부분 생략 없이 전체 코드) */
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
+
+<style>
+/* =========================================
+   CSS Variables & Base Styles
+   ========================================= */
 :root {
   --font-sans: 'Inter', system-ui, sans-serif;
   --radius: 0.75rem;
+  
+  /* Light Mode Default */
   --background: #ffffff;
   --foreground: #0f0f0f;
   --card: #ffffff;
@@ -33,7 +46,8 @@
   --input: #e4e4e7;
 }
 
-.dark {
+/* Dark Mode Override (Targeting html.dark) */
+html.dark {
   --background: #121212;
   --foreground: #fafafa;
   --card: #1c1c1c;
@@ -60,13 +74,14 @@ body {
   color: var(--foreground);
   line-height: 1.6;
   min-height: 100vh;
-  transition: background-color 0.3s, color 0.3s;
+  /* transition: background-color 0.3s, color 0.3s; -> 제거: 초기 로딩 시 깜빡임 원인이 될 수 있음 */
   -webkit-font-smoothing: antialiased;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+  cursor: pointer;
 }
 
 #app {
@@ -85,23 +100,32 @@ main {
   flex: 1;
 }
 
+/* Page Visibility Logic */
 .page {
   display: none;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
 .page.active {
   display: block;
 }
 
-/* Header */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================
+   Header & Navigation
+   ========================================= */
 .header {
   position: sticky;
   top: 0;
   z-index: 50;
-  background-color: rgba(var(--background), 0.8);
+  background-color: rgba(var(--background), 0.8); /* fallback */
   background: var(--background);
   border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(8px);
+  /* backdrop-filter issue on some mobile browsers handled by background opacity */
 }
 
 .header-content {
@@ -119,13 +143,8 @@ main {
   letter-spacing: -0.025em;
 }
 
-.logo-lambda {
-  color: var(--foreground);
-}
-
-.logo-ground {
-  color: var(--primary);
-}
+.logo-lambda { color: var(--foreground); }
+.logo-ground { color: var(--primary); }
 
 .nav-desktop {
   display: none;
@@ -138,10 +157,22 @@ main {
   font-weight: 500;
   color: var(--muted-foreground);
   transition: color 0.2s;
+  position: relative;
 }
 
 .nav-link:hover, .nav-link.active {
   color: var(--primary);
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--primary);
+  border-radius: 2px;
 }
 
 .nav-divider {
@@ -185,12 +216,9 @@ main {
   display: none;
 }
 
-.icon-small {
-  width: 1rem;
-  height: 1rem;
-}
-
-/* Mobile Menu */
+/* =========================================
+   Mobile Menu (Improved Animation)
+   ========================================= */
 .mobile-menu {
   position: fixed;
   top: 4rem;
@@ -201,11 +229,17 @@ main {
   border: 1px solid var(--border);
   border-radius: 0 0 0 var(--radius);
   z-index: 40;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  
+  /* Slide Animation */
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  visibility: hidden; /* hide from screen readers when closed */
 }
 
-.mobile-menu.hidden {
-  display: none;
+.mobile-menu.open {
+  transform: translateX(0);
+  visibility: visible;
 }
 
 .mobile-menu-content {
@@ -220,16 +254,20 @@ main {
   font-weight: 500;
   padding: 0.75rem;
   border-radius: 0.5rem;
-  transition: background-color 0.2s;
+  color: var(--foreground);
+  transition: background-color 0.2s, color 0.2s;
 }
 
-.mobile-nav-link:hover {
+.mobile-nav-link:hover, .mobile-nav-link.active {
   background: var(--muted);
+  color: var(--primary);
 }
 
-/* Hero */
+/* =========================================
+   Hero & Cards
+   ========================================= */
 .hero {
-  padding: 2rem 1rem 4rem;
+  padding: 3rem 1rem 5rem;
   text-align: center;
 }
 
@@ -246,22 +284,10 @@ main {
   font-weight: 500;
 }
 
-.text-foreground {
-  color: var(--foreground);
-}
+.text-foreground { color: var(--foreground); }
+.text-primary { color: var(--primary); }
 
-.text-primary {
-  color: var(--primary);
-}
-
-.text-muted {
-  color: var(--muted-foreground);
-}
-
-/* App Grid */
-.app-grid-section {
-  padding-bottom: 8rem;
-}
+.app-grid-section { padding-bottom: 8rem; }
 
 .app-grid {
   display: grid;
@@ -276,19 +302,15 @@ main {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  min-height: 16rem;
+  min-height: 14rem;
   transition: all 0.3s;
-  cursor: pointer;
 }
 
 .app-card:hover {
   background: var(--muted);
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  transform: translateY(-2px);
-}
-
-.app-card:hover .card-title {
-  color: var(--primary);
+  transform: translateY(-4px);
+  border-color: var(--primary);
 }
 
 .card-icon {
@@ -301,46 +323,30 @@ main {
   margin-bottom: 1rem;
 }
 
-.card-icon-sun {
-  color: #f59e0b;
-}
-
-.card-icon-sun svg {
-  width: 2rem;
-  height: 2rem;
-}
-
-.card-icon-cpu {
-  color: #3b82f6;
-}
-
-.card-icon-cpu svg {
-  width: 2rem;
-  height: 2rem;
-}
+.card-icon-sun { color: #f59e0b; }
+.card-icon-cpu { color: #3b82f6; }
+.card-icon-rf { color: #8b5cf6; }
 
 .card-title {
   font-size: 1.25rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
   color: var(--foreground);
-  transition: color 0.3s;
 }
 
 .card-desc {
   color: var(--muted-foreground);
   line-height: 1.6;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
-/* Footer */
+/* =========================================
+   Common Components
+   ========================================= */
 .footer {
   border-top: 1px solid var(--border);
   padding: 2rem 0;
   background: var(--background);
+  margin-top: auto;
 }
 
 .footer-content {
@@ -351,38 +357,20 @@ main {
   text-align: center;
 }
 
-.footer-copy {
+.footer-copy, .footer-links a {
   font-size: 0.875rem;
   color: var(--muted-foreground);
 }
 
-.footer-links {
-  display: flex;
-  gap: 1rem;
-}
+.footer-links { display: flex; gap: 1rem; }
+.footer-links a:hover { color: var(--primary); text-decoration: underline; }
 
-.footer-links a {
-  font-size: 0.875rem;
-  color: var(--muted-foreground);
-  transition: color 0.2s;
-}
-
-.footer-links a:hover {
-  color: var(--primary);
-  text-decoration: underline;
-}
-
-/* Page Container */
 .page-container {
   padding: 4rem 1rem;
   max-width: 768px;
+  margin: 0 auto;
 }
 
-.text-center {
-  text-align: center;
-}
-
-/* Form Styles */
 .form-card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -401,9 +389,7 @@ main {
   margin-bottom: 1.5rem;
 }
 
-.form-group {
-  margin-bottom: 1.5rem;
-}
+.form-group { margin-bottom: 1.5rem; }
 
 .form-group label {
   display: block;
@@ -412,8 +398,7 @@ main {
   margin-bottom: 0.5rem;
 }
 
-.form-group input,
-.form-group textarea {
+.form-group input, .form-group textarea {
   width: 100%;
   padding: 0.75rem 1rem;
   background: var(--background);
@@ -425,15 +410,10 @@ main {
   transition: border-color 0.2s;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
+.form-group input:focus, .form-group textarea:focus {
   outline: none;
   border-color: var(--primary);
-}
-
-.form-group textarea {
-  resize: vertical;
-  min-height: 120px;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
 }
 
 .btn-primary {
@@ -445,108 +425,26 @@ main {
   border-radius: 0.5rem;
   font-family: inherit;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: opacity 0.2s;
 }
 
-.btn-primary:hover {
-  opacity: 0.9;
-}
+.btn-primary:hover { opacity: 0.9; }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
-/* Back Link */
-.back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--muted-foreground);
-  margin-bottom: 2rem;
-  transition: color 0.2s, padding-left 0.2s;
-}
-
-.back-link:hover {
-  color: var(--foreground);
-  padding-left: 0.5rem;
-}
-
-/* Prose / Article */
-.prose {
-  max-width: 65ch;
-}
-
-.prose h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-}
-
-.prose h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-top: 2rem;
-  margin-bottom: 0.75rem;
-}
-
-.prose p {
-  margin-bottom: 1rem;
-  color: var(--muted-foreground);
-}
-
-.prose .lead {
-  font-size: 1.125rem;
-  color: var(--muted-foreground);
-}
-
-.prose a {
-  color: var(--primary);
-}
-
-.prose a:hover {
-  text-decoration: underline;
-}
-
-.highlight-box {
-  background: var(--muted);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  margin: 2rem 0;
-}
-
-.page-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.page-header-icon {
-  width: 4rem;
-  height: 4rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.page-header-icon svg {
-  width: 100%;
-  height: 100%;
-}
-
-.mb-8 {
-  margin-bottom: 2rem;
-}
-
+/* Guestbook */
 .guestbook-list {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  margin-top: 2rem;
 }
 
 .guestbook-item {
   background: var(--card);
   border: 1px solid var(--border);
-  padding: 1rem;
+  padding: 1.25rem;
   border-radius: var(--radius);
 }
 
@@ -557,112 +455,68 @@ main {
   font-size: 0.875rem;
 }
 
-.gb-author {
-  font-weight: 700;
-  color: var(--foreground);
-}
+.gb-author { font-weight: 700; color: var(--foreground); }
+.gb-date { color: var(--muted-foreground); font-size: 0.8rem; }
+.gb-content { color: var(--muted-foreground); line-height: 1.5; white-space: pre-wrap; }
 
-.gb-date {
-  color: var(--muted-foreground);
-}
-
-.gb-content {
-  color: var(--muted-foreground);
-  line-height: 1.5;
-}
-
-/* About Page Styles */
-.about-list {
-  list-style: none;
-  padding-left: 0;
-}
-
-.about-item {
-  margin-bottom: 1rem;
-  display: flex;
-  gap: 1rem;
-  align-items: flex-start;
-}
-
+/* About Styles */
+.about-list { list-style: none; padding: 0; }
+.about-item { margin-bottom: 1.5rem; display: flex; gap: 1rem; align-items: flex-start; }
 .about-badge {
   background: var(--primary);
   color: var(--primary-foreground);
   padding: 2px 8px;
   border-radius: 4px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: bold;
   margin-top: 4px;
+  white-space: nowrap;
 }
+.about-badge.data { background: #10b981; }
 
-.about-badge.data {
-  background: #10b981; /* Success color for Data */
-}
-
-.about-item p {
-  margin: 0.2rem 0;
-  font-size: 0.95rem;
-}
-
-.tech-stack {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  margin-top: 1rem;
-}
-
+.tech-stack { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
 .tech-tag {
   border: 1px solid var(--border);
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.9rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
   color: var(--muted-foreground);
-  background: var(--card);
+  background: var(--secondary);
 }
 
+.prose { max-width: 65ch; margin: 0 auto; }
+.prose p { margin-bottom: 1em; color: var(--muted-foreground); }
+.prose h3 { margin-top: 2em; margin-bottom: 1em; font-weight: 600; font-size: 1.25rem; }
+
+/* Responsive */
 @media (min-width: 768px) {
-  .nav-desktop {
-    display: flex;
-  }
-  
-  .nav-mobile {
-    display: none;
-  }
-  
-  .hero-title {
-    font-size: 4.5rem;
-  }
-  
-  .app-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  .footer-content {
-    flex-direction: row;
-    justify-content: space-between;
-    text-align: left;
-  }
+  .nav-desktop { display: flex; }
+  .nav-mobile { display: none; }
+  .hero-title { font-size: 4.5rem; }
+  .app-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-content { flex-direction: row; justify-content: space-between; text-align: left; }
 }
-
 @media (min-width: 1024px) {
-  .app-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}</style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  .app-grid { grid-template-columns: repeat(3, 1fr); }
+}
+</style>
 </head>
 <body>
   <div id="app">
     <header class="header">
       <div class="container header-content">
-        <a href="#" class="logo" data-page="home">
+        <a href="#home" class="logo">
           <span class="logo-lambda">Lambda</span><span class="logo-ground">Ground</span>
         </a>
+
         <nav class="nav-desktop">
-          <a href="#" class="nav-link active" data-page="home" data-i18n="nav.home">Home</a>
-          <a href="#" class="nav-link" data-page="about" data-i18n="nav.about">About</a>
-          <a href="#" class="nav-link" data-page="guestbook" data-i18n="nav.guestbook">Guestbook</a>
-          <a href="#" class="nav-link" data-page="contact" data-i18n="nav.contact">Contact</a>
+          <a href="#home" class="nav-link" data-page="home" data-i18n="nav.home">Home</a>
+          <a href="#about" class="nav-link" data-page="about" data-i18n="nav.about">About</a>
+          <a href="#guestbook" class="nav-link" data-page="guestbook" data-i18n="nav.guestbook">Guestbook</a>
+          <a href="#contact" class="nav-link" data-page="contact" data-i18n="nav.contact">Contact</a>
+          
           <div class="nav-divider"></div>
+          
           <button class="icon-btn" id="theme-toggle" title="Toggle Theme">
             <svg id="icon-sun" class="icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
             <svg id="icon-moon" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
@@ -683,12 +537,12 @@ main {
       </div>
     </header>
 
-    <div class="mobile-menu hidden" id="mobile-menu">
+    <div class="mobile-menu" id="mobile-menu">
       <div class="mobile-menu-content">
-        <a href="#" class="mobile-nav-link" data-page="home" data-i18n="nav.home">Home</a>
-        <a href="#" class="mobile-nav-link" data-page="about" data-i18n="nav.about">About</a>
-        <a href="#" class="mobile-nav-link" data-page="guestbook" data-i18n="nav.guestbook">Guestbook</a>
-        <a href="#" class="mobile-nav-link" data-page="contact" data-i18n="nav.contact">Contact</a>
+        <a href="#home" class="mobile-nav-link" data-page="home" data-i18n="nav.home">Home</a>
+        <a href="#about" class="mobile-nav-link" data-page="about" data-i18n="nav.about">About</a>
+        <a href="#guestbook" class="mobile-nav-link" data-page="guestbook" data-i18n="nav.guestbook">Guestbook</a>
+        <a href="#contact" class="mobile-nav-link" data-page="contact" data-i18n="nav.contact">Contact</a>
       </div>
     </div>
 
@@ -704,62 +558,47 @@ main {
         
         <section class="container app-grid-section">
           <div class="app-grid">
-            
-            <a href="https://moneyweather.lambdaground.com" class="app-card">
+            <a href="https://moneyweather.lambdaground.com" class="app-card" target="_blank">
               <div class="card-icon card-icon-sun">
-                <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" fill="none"></path></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path><circle cx="12" cy="12" r="4"></circle></svg>
               </div>
               <h3 class="card-title" data-i18n="app.money.title">Money Weather</h3>
               <p class="card-desc" data-i18n="app.money.desc">Your daily financial forecast.</p>
             </a>
             
-            <a href="https://circuitsim.lambdaground.com" class="app-card">
+            <a href="https://circuitsim.lambdaground.com" class="app-card" target="_blank">
               <div class="card-icon card-icon-cpu">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"></rect><rect x="9" y="9" width="6" height="6"></rect><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"></path></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><rect x="4" y="4" width="16" height="16" rx="2"></rect><rect x="9" y="9" width="6" height="6"></rect><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"></path></svg>
               </div>
               <h3 class="card-title">Circuit Simulator</h3>
               <p class="card-desc">Easy circuit drawing and analysis.</p>
             </a>
 
-            <a href="https://microstrip.lambdaground.com" class="app-card">
-              <div class="card-icon card-icon-cpu">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20M2 12l5-5M22 12l-5 5"></path></svg>
+            <a href="https://microstrip.lambdaground.com" class="app-card" target="_blank">
+              <div class="card-icon card-icon-rf">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M2 12h20M2 12l5-5M22 12l-5 5"></path></svg>
               </div>
-              <h3 class="card-title">Microstrip Calculator</h3>
-              <p class="card-desc">Design for RF transmission lines.</p>
+              <h3 class="card-title">Microstrip Calc</h3>
+              <p class="card-desc">RF transmission line impedance calculator.</p>
             </a>
-
-            <a href="https://rfcirsim.lambdaground.com" class="app-card">
-              <div class="card-icon card-icon-cpu">
-                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-              </div>
-              <h3 class="card-title">RF CirSim</h3>
-              <p class="card-desc">RF Circuit Simulation Tool.</p>
-            </a>
-
           </div>
         </section>
       </div>
 
       <div id="page-about" class="page">
         <section class="container page-container">
-          <div class="page-header">
-            <div class="page-header-icon">
-               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="40" height="40"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M12 2v1"></path><path d="M4.22 4.22l.71.71"></path><path d="M19.07 4.93l.71-.71"></path><path d="M12 6a7 7 0 0 1 7 7c0 2.21-1.34 4.14-3.36 5H8.36A7 7 0 0 1 12 6z"></path></svg>
-            </div>
+          <div class="page-header" style="text-align:center; margin-bottom:2rem;">
             <h1 data-i18n="about.title">About Lambda Ground</h1>
           </div>
 
           <article class="prose">
-            <p class="lead" data-i18n="about.intro">
-              Lambda Ground is a specialized web platform designed for engineers, researchers, and data enthusiasts. We provide web-based simulation tools and real-time data analysis dashboards.
+            <p class="lead" data-i18n="about.intro" style="font-size: 1.1rem; color: var(--foreground);">
+              Lambda Ground is a specialized web platform designed for engineers, researchers, and data enthusiasts.
             </p>
 
-            <div class="highlight-box">
+            <div style="background:var(--muted); padding:1.5rem; border-radius:var(--radius); margin: 2rem 0;">
               <h3 style="margin-top:0;">Our Mission</h3>
-              <p>
-                To simplify complex engineering calculations and make technical insights accessible directly from the browser, without the need for heavy software installations.
-              </p>
+              <p>To simplify complex engineering calculations and make technical insights accessible directly from the browser.</p>
             </div>
 
             <h3>Core Focus Areas</h3>
@@ -767,19 +606,15 @@ main {
               <li class="about-item">
                 <span class="about-badge">ENG</span>
                 <div>
-                  <strong>Electronics &amp; RF Engineering</strong>
-                  <p class="text-muted">
-                    Tools for Microstrip line impedance, Coil inductance calculation, and Circuit simulation suitable for Power Electronics and RF design.
-                  </p>
+                  <strong>Electronics &amp; RF</strong>
+                  <p class="text-muted">Tools for Power Electronics and RF design simulations.</p>
                 </div>
               </li>
               <li class="about-item">
                 <span class="about-badge data">DATA</span>
                 <div>
                   <strong>Economic Intelligence</strong>
-                  <p class="text-muted">
-                    'Money Weather' dashboard provides visualization of key economic indicators to help users understand market trends at a glance.
-                  </p>
+                  <p class="text-muted">Visualizing key economic indicators and market trends.</p>
                 </div>
               </li>
             </ul>
@@ -787,16 +622,12 @@ main {
             <hr style="margin: 2rem 0; border-color: var(--border);">
 
             <h3>Technology Stack</h3>
-            <p class="text-muted">
-              Built with modern web standards for performance and reliability.
-            </p>
             <div class="tech-stack">
               <span class="tech-tag">HTML5 &amp; CSS3</span>
-              <span class="tech-tag">Vanilla JavaScript</span>
+              <span class="tech-tag">Vanilla JS</span>
               <span class="tech-tag">Canvas API</span>
               <span class="tech-tag">Supabase</span>
             </div>
-
           </article>
         </section>
       </div>
@@ -805,24 +636,19 @@ main {
         <section class="container page-container">
           <div class="form-card">
             <h2 class="form-title" data-i18n="contact.title">Contact Us</h2>
-            <p class="form-subtitle">We'd love to hear from you. Send us a message below.</p>
-            <form id="contact-form" name="contact" method="POST" data-netlify="true">
-              <input type="hidden" name="form-name" value="contact">
+            <p class="form-subtitle">We'd love to hear from you.</p>
+            <form id="contact-form">
               <div class="form-group">
                 <label data-i18n="contact.name">Name</label>
-                <input type="text" name="name" required="" placeholder="John Doe">
+                <input type="text" name="name" required placeholder="John Doe">
               </div>
               <div class="form-group">
                 <label data-i18n="contact.email">Email</label>
-                <input type="email" name="email" required="" placeholder="john@example.com">
-              </div>
-              <div class="form-group">
-                <label data-i18n="contact.subject">Subject</label>
-                <input type="text" name="subject" required="" placeholder="Inquiry about...">
+                <input type="email" name="email" required placeholder="john@example.com">
               </div>
               <div class="form-group">
                 <label data-i18n="contact.message">Message</label>
-                <textarea name="message" required="" placeholder="Your message here..." rows="5"></textarea>
+                <textarea name="message" required placeholder="Your message here..." rows="5"></textarea>
               </div>
               <button type="submit" class="btn-primary" data-i18n="contact.send">Send Message</button>
             </form>
@@ -832,60 +658,62 @@ main {
 
       <div id="page-guestbook" class="page">
         <section class="container page-container">
-          <div class="page-header">
-            <div class="page-header-icon">🖊️</div>
-            <h1>Guestbook</h1>
+          <div style="margin-bottom: 2rem; text-align: center;">
+            <h1 data-i18n="nav.guestbook">Guestbook</h1>
+            <p class="text-muted">Leave a note for the community!</p>
           </div>
-          <p class="text-muted mb-8">Lambda Ground에 방문해주셔서 감사합니다. 자유롭게 방명록을 남겨주세요!</p>
 
-          <div class="form-card mb-8">
+          <div class="form-card">
             <form id="guestbook-form">
               <div class="form-group">
                 <label>Name</label>
-                <input type="text" id="gb-name" required="" placeholder="Nickname">
+                <input type="text" id="gb-name" required placeholder="Your Nickname" maxlength="20">
               </div>
               <div class="form-group">
                 <label>Message</label>
-                <textarea id="gb-message" required="" placeholder="Leave a message..." rows="3"></textarea>
+                <textarea id="gb-message" required placeholder="Say something nice..." rows="3" maxlength="200"></textarea>
               </div>
               <button type="submit" class="btn-primary">Post Message</button>
             </form>
           </div>
 
           <div id="guestbook-list" class="guestbook-list">
-            <div class="empty-state text-center text-muted">
-              <p>Loading...</p>
-            </div>
+            <div class="text-center text-muted">Loading messages...</div>
           </div>
         </section>
       </div>
 
-      <div id="page-privacy" class="page">
-        <section class="container page-container">
-          <a href="#" class="back-link" data-page="home">
-            <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg>
-            <span data-i18n="privacy.back">Back to Home</span>
-          </a>
-          <article class="prose">
-            <h1 data-i18n="privacy.title">Privacy Policy</h1>
-            <p class="lead" data-i18n="privacy.last_updated">Last updated: December 14, 2025</p>
-            <div class="highlight-box">
-              <p data-i18n="privacy.content">This is a standard privacy policy placeholder. We respect your privacy and are committed to protecting your personal data.</p>
-            </div>
-            <h3 data-i18n="privacy.section1.title">1. Information We Collect</h3>
-            <p data-i18n="privacy.section1.content">We collect information that you provide directly to us, such as when you create an account, update your profile, or communicate with us.</p>
-            <h3 data-i18n="privacy.section2.title">2. How We Use Your Information</h3>
-            <p data-i18n="privacy.section2.content">We use</p></article></section></div></main></div><script>// ==========================================
-// 1. Supabase 설정 (본인 키로 변경 필수!)
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-content">
+        <div class="footer-copy">© 2026 Lambda Ground. All rights reserved.</div>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+<script>
 // ==========================================
+// 1. Supabase Configuration
+// ==========================================
+// IMPORTANT: Enable Row Level Security (RLS) on your 'guestbook' table in Supabase.
+// Allow INSERT for public (anon), but restrict UPDATE/DELETE to authenticated users only.
 const SUPABASE_URL = 'https://rhiaahzaftsfnbaywcby.supabase.co'; 
-const SUPABASE_KEY = 'sb_publishable_iDFJ6pJRKCbwaE1SQleLMg_mOHD8Q4z';
+const SUPABASE_KEY = 'sb_publishable_iDFJ6pJRKCbwaE1SQleLMg_mOHD8Q4z'; // Safe to expose ONLY if RLS is on.
 
-const { createClient } = supabase;
-const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+let sb;
+if (typeof supabase !== 'undefined') {
+  sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+} else {
+  console.error('Supabase SDK not loaded.');
+}
 
 // ==========================================
-// 2. Translations (다국어 설정)
+// 2. Translations
 // ==========================================
 const translations = {
   en: {
@@ -893,165 +721,275 @@ const translations = {
     "nav.contact": "Contact",
     "nav.guestbook": "Guestbook",
     "nav.about": "About",
-    "nav.privacy": "Privacy",
     "hero.subtitle": "Where Code Becomes Play 🚀",
-    "app.lotto.title": "Lotto Pick",
-    "app.lotto.desc": "Get your lucky numbers for today. Data-driven Lotto Numbers!",
     "app.money.title": "Money Weather",
     "app.money.desc": "Your daily financial forecast.",
-    "app.mbti.title": "MBTI Compatibility",
-    "app.mbti.desc": "Check compatibility with parent & child animal mascots.",
-    "app.engineering.title": "Engineering Tools",
-    "app.engineering.desc": "RF Transmission, Magnetic Core, Radio Wave, and Coil calculations.",
     "about.title": "About Lambda Ground",
-    "about.intro": "Lambda Ground is a specialized web platform designed for engineers, researchers, and data enthusiasts. We provide web-based simulation tools and real-time data analysis dashboards.",
-    "footer.rights": "All rights reserved.",
+    "about.intro": "Lambda Ground is a specialized web platform for engineers and researchers.",
     "contact.title": "Contact Us",
     "contact.name": "Name",
     "contact.email": "Email",
-    "contact.subject": "Subject",
     "contact.message": "Message",
-    "contact.send": "Send Message",
-    "privacy.title": "Privacy Policy",
-    "privacy.back": "Back to Home",
-    "privacy.last_updated": "Last updated: December 14, 2025",
-    "privacy.content": "This is a standard privacy policy placeholder.",
-    "privacy.section1.title": "1. Information We Collect",
-    "privacy.section1.content": "We collect information that you provide directly to us.",
-    "privacy.section2.title": "2. How We Use Your Information",
-    "privacy.section2.content": "We use the information we collect to operate the Service.",
-    "privacy.section3.title": "3. Data Security",
-    "privacy.section3.content": "We implement appropriate measures to protect your information.",
-    "privacy.section4.title": "4. Contact Us",
-    "privacy.section4.content": "If you have any questions, please contact us at:"
+    "contact.send": "Send Message"
   },
   ko: {
     "nav.home": "홈",
     "nav.contact": "문의하기",
     "nav.guestbook": "방명록",
     "nav.about": "소개",
-    "nav.privacy": "개인정보처리방침",
     "hero.subtitle": "모두의 놀이터 🚀",
-    "app.lotto.title": "Lotto Pick",
-    "app.lotto.desc": "오늘의 행운 번호를 뽑아보세요. 통계 기반 로또 번호 생성!",
     "app.money.title": "Money Weather",
     "app.money.desc": "오늘의 경제 날씨를 확인하세요.",
-    "app.mbti.title": "MBTI 궁합",
-    "app.mbti.desc": "부모와 아이 동물 마스코트로 확인하는 성격 궁합.",
-    "app.engineering.title": "공학 도구 모음",
-    "app.engineering.desc": "RF 전송선로, 자성 코어, 전파, 코일 계산 등 다양한 공학 앱.",
     "about.title": "서비스 소개",
-    "about.intro": "Lambda Ground는 엔지니어와 연구자를 위한 전문 웹 플랫폼입니다. 웹 기반 시뮬레이션 도구와 데이터 분석 대시보드를 제공합니다.",
-    "footer.rights": "모든 권리 보유.",
+    "about.intro": "Lambda Ground는 엔지니어와 연구자를 위한 전문 웹 플랫폼입니다.",
     "contact.title": "문의하기",
     "contact.name": "이름",
     "contact.email": "이메일",
-    "contact.subject": "제목",
     "contact.message": "메시지",
-    "contact.send": "메시지 보내기",
-    "privacy.title": "개인정보처리방침",
-    "privacy.back": "홈으로 돌아가기",
-    "privacy.last_updated": "최종 업데이트: 2025년 12월 14일",
-    "privacy.content": "표준 개인정보처리방침 예시입니다.",
-    "privacy.section1.title": "1. 수집하는 정보",
-    "privacy.section1.content": "귀하가 직접 제공하는 정보를 수집합니다.",
-    "privacy.section2.title": "2. 정보 사용 방법",
-    "privacy.section2.content": "수집한 정보는 서비스 운영에 사용됩니다.",
-    "privacy.section3.title": "3. 데이터 보안",
-    "privacy.section3.content": "개인 정보를 보호하기 위해 적절한 조치를 시행합니다.",
-    "privacy.section4.title": "4. 문의하기",
-    "privacy.section4.content": "궁금한 점이 있으시면 다음으로 문의해 주십시오:"
+    "contact.send": "전송하기"
   }
 };
 
-// ==========================================
-// 3. State & Initialization
-// ==========================================
 let currentLanguage = localStorage.getItem('language') || 'en';
-let currentTheme = localStorage.getItem('theme') || 'dark';
-let currentPage = 'home';
 
+// ==========================================
+// 3. Core Logic (Theme, Routing, etc.)
+// ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-  initTheme();
+  // Theme UI Init
+  updateThemeIcons();
+  
+  // Language Init
   initLanguage();
+  
+  // Navigation Init
   initNavigation();
+  
+  // Mobile Menu Init
   initMobileMenu();
+  
+  // Forms
   initContactForm();
   loadGuestbook();
 });
 
-// ==========================================
-// 4. Guestbook Logic (Supabase Version)
-// ==========================================
-const guestbookForm = document.getElementById('guestbook-form');
-const guestbookList = document.getElementById('guestbook-list');
+/* Theme Handling */
+function toggleTheme() {
+  const isDark = document.documentElement.classList.contains('dark');
+  const newTheme = isDark ? 'light' : 'dark';
+  
+  if (newTheme === 'dark') {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
+  
+  localStorage.setItem('theme', newTheme);
+  updateThemeIcons();
+}
 
-if (guestbookForm) {
-  guestbookForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const nameInput = document.getElementById('gb-name');
-    const msgInput = document.getElementById('gb-message');
-    const btn = guestbookForm.querySelector('button');
+function updateThemeIcons() {
+  const isDark = document.documentElement.classList.contains('dark');
+  const sunIcons = document.querySelectorAll('#icon-sun, #icon-sun-mobile');
+  const moonIcons = document.querySelectorAll('#icon-moon, #icon-moon-mobile');
+  
+  if (isDark) {
+    sunIcons.forEach(el => el.classList.remove('hidden'));
+    moonIcons.forEach(el => el.classList.add('hidden'));
+  } else {
+    sunIcons.forEach(el => el.classList.add('hidden'));
+    moonIcons.forEach(el => el.classList.remove('hidden'));
+  }
+}
 
-    btn.disabled = true;
-    btn.innerText = 'Sending...';
+/* Language Handling */
+function initLanguage() {
+  updateLanguageUI();
+  applyTranslations();
+}
 
-    try {
-      const { error } = await sb
-        .from('guestbook')
-        .insert({
-          name: nameInput.value,
-          message: msgInput.value
-        });
-      if (error) throw error;
-      guestbookForm.reset();
-      loadGuestbook();
-    } catch (err) {
-      console.error('Error:', err);
-      alert('Failed to post message. Please try again.');
-    } finally {
-      btn.disabled = false;
-      btn.innerText = 'Post Message';
+function toggleLanguage() {
+  currentLanguage = currentLanguage === 'en' ? 'ko' : 'en';
+  localStorage.setItem('language', currentLanguage);
+  updateLanguageUI();
+  applyTranslations();
+}
+
+function updateLanguageUI() {
+  const flags = currentLanguage === 'en' ? '🇰🇷' : '🇺🇸';
+  document.getElementById('lang-toggle').textContent = flags;
+  document.getElementById('lang-toggle-mobile').textContent = flags;
+}
+
+function applyTranslations() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (translations[currentLanguage][key]) {
+      el.textContent = translations[currentLanguage][key];
     }
   });
 }
 
+/* Navigation & Routing (Hash-based for Back Button support) */
+function initNavigation() {
+  // Event Listeners for Buttons
+  document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+  document.getElementById('theme-toggle-mobile').addEventListener('click', toggleTheme);
+  document.getElementById('lang-toggle').addEventListener('click', toggleLanguage);
+  document.getElementById('lang-toggle-mobile').addEventListener('click', toggleLanguage);
+
+  // Handle Hash Changes
+  window.addEventListener('hashchange', handleRouting);
+  
+  // Initial Route
+  handleRouting();
+}
+
+function handleRouting() {
+  // Get hash without '#' or default to 'home'
+  let hash = window.location.hash.replace('#', '');
+  if (!hash) hash = 'home';
+  
+  // Hide all pages, show target
+  const pages = document.querySelectorAll('.page');
+  let targetFound = false;
+  
+  pages.forEach(page => {
+    if (page.id === `page-${hash}`) {
+      page.classList.add('active');
+      targetFound = true;
+    } else {
+      page.classList.remove('active');
+    }
+  });
+  
+  // If hash is invalid, go home
+  if (!targetFound && hash !== 'home') {
+    window.location.hash = '#home';
+    return;
+  }
+  
+  // Update Nav Active States
+  document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(link => {
+    // Check if href matches current hash
+    if (link.getAttribute('href') === `#${hash}`) {
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
+  });
+  
+  closeMobileMenu();
+  window.scrollTo(0, 0);
+}
+
+/* Mobile Menu */
+function initMobileMenu() {
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  
+  menuToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    mobileMenu.classList.toggle('open');
+  });
+  
+  // Close when clicking outside
+  document.addEventListener('click', (e) => {
+    if (mobileMenu.classList.contains('open') && 
+        !mobileMenu.contains(e.target) && 
+        !menuToggle.contains(e.target)) {
+      mobileMenu.classList.remove('open');
+    }
+  });
+}
+
+function closeMobileMenu() {
+  const mobileMenu = document.getElementById('mobile-menu');
+  if (mobileMenu) mobileMenu.classList.remove('open');
+}
+
+/* Contact Form (Demo) */
+function initContactForm() {
+  const form = document.getElementById('contact-form');
+  if(form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Message sent! (Demo mode)');
+      form.reset();
+    });
+  }
+}
+
+/* Guestbook Logic */
 async function loadGuestbook() {
-  if (!guestbookList) return;
+  const list = document.getElementById('guestbook-list');
+  if (!sb || !list) return;
+
   try {
     const { data, error } = await sb
       .from('guestbook')
       .select('*')
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .limit(20);
+
     if (error) throw error;
-    renderEntries(data);
+    
+    renderGuestbook(data);
   } catch (err) {
-    console.error('Load Error:', err);
-    guestbookList.innerHTML = `<p class="text-muted">Failed to load messages.</p>`;
+    console.error('Guestbook Load Error:', err);
+    list.innerHTML = `<p class="text-center text-muted">Failed to load messages. <br><small>${err.message}</small></p>`;
   }
 }
 
-function renderEntries(entries) {
-  guestbookList.innerHTML = '';
+function renderGuestbook(entries) {
+  const list = document.getElementById('guestbook-list');
+  list.innerHTML = '';
+  
   if (!entries || entries.length === 0) {
-    guestbookList.innerHTML = `
-      <div class="empty-state text-center text-muted">
-        <p>No messages yet. Be the first to leave one!</p>
-      </div>`;
+    list.innerHTML = '<p class="text-center text-muted">No messages yet. Be the first!</p>';
     return;
   }
+  
   entries.forEach(entry => {
-    const dateStr = new Date(entry.created_at).toLocaleString();
+    const date = new Date(entry.created_at).toLocaleDateString();
     const div = document.createElement('div');
     div.className = 'guestbook-item';
     div.innerHTML = `
       <div class="guestbook-header">
         <span class="gb-author">${escapeHtml(entry.name)}</span>
-        <span class="gb-date">${dateStr}</span>
+        <span class="gb-date">${date}</span>
       </div>
-      <p class="gb-content">${escapeHtml(entry.message)}</p>
+      <div class="gb-content">${escapeHtml(entry.message)}</div>
     `;
-    guestbookList.appendChild(div);
+    list.appendChild(div);
+  });
+}
+
+const gbForm = document.getElementById('guestbook-form');
+if (gbForm) {
+  gbForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!sb) return alert('Database not connected');
+    
+    const name = document.getElementById('gb-name').value;
+    const msg = document.getElementById('gb-message').value;
+    const btn = gbForm.querySelector('button');
+    
+    btn.disabled = true;
+    btn.textContent = 'Posting...';
+    
+    try {
+      const { error } = await sb.from('guestbook').insert({ name, message: msg });
+      if (error) throw error;
+      
+      gbForm.reset();
+      loadGuestbook();
+    } catch (err) {
+      alert('Error posting: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Post Message';
+    }
   });
 }
 
@@ -1064,125 +1002,6 @@ function escapeHtml(text) {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
 }
-
-// ==========================================
-// 5. General UI Functions
-// ==========================================
-function initTheme() {
-  if (currentTheme === 'dark') {
-    document.body.classList.add('dark');
-  }
-  updateThemeIcons();
-}
-
-function toggleTheme() {
-  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-  localStorage.setItem('theme', currentTheme);
-  document.body.classList.toggle('dark');
-  updateThemeIcons();
-}
-
-function updateThemeIcons() {
-  const sunIcons = document.querySelectorAll('#icon-sun, #icon-sun-mobile');
-  const moonIcons = document.querySelectorAll('#icon-moon, #icon-moon-mobile');
-  if (currentTheme === 'dark') {
-    sunIcons.forEach(icon => icon.classList.remove('hidden'));
-    moonIcons.forEach(icon => icon.classList.add('hidden'));
-  } else {
-    sunIcons.forEach(icon => icon.classList.add('hidden'));
-    moonIcons.forEach(icon => icon.classList.remove('hidden'));
-  }
-}
-
-function initLanguage() {
-  updateLanguageUI();
-  updateAllTranslations();
-}
-
-function toggleLanguage() {
-  currentLanguage = currentLanguage === 'en' ? 'ko' : 'en';
-  localStorage.setItem('language', currentLanguage);
-  updateLanguageUI();
-  updateAllTranslations();
-}
-
-function updateLanguageUI() {
-  const langButtons = document.querySelectorAll('#lang-toggle, #lang-toggle-mobile');
-  langButtons.forEach(btn => {
-    btn.textContent = currentLanguage === 'en' ? '🇰🇷' : '🇺🇸';
-  });
-}
-
-function updateAllTranslations() {
-  const elements = document.querySelectorAll('[data-i18n]');
-  elements.forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    if (translations[currentLanguage][key]) {
-      el.textContent = translations[currentLanguage][key];
-    }
-  });
-}
-
-function initNavigation() {
-  document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
-  document.getElementById('theme-toggle-mobile').addEventListener('click', toggleTheme);
-  document.getElementById('lang-toggle').addEventListener('click', toggleLanguage);
-  document.getElementById('lang-toggle-mobile').addEventListener('click', toggleLanguage);
-  document.querySelectorAll('[data-page]').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const page = link.getAttribute('data-page');
-      navigateToPage(page);
-      closeMobileMenu();
-    });
-  });
-}
-
-function navigateToPage(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const targetPage = document.getElementById(`page-${page}`);
-  if (targetPage) {
-    targetPage.classList.add('active');
-    currentPage = page;
-    document.querySelectorAll('.nav-link').forEach(link => {
-      link.classList.remove('active');
-      if (link.getAttribute('data-page') === page) {
-        link.classList.add('active');
-      }
-    });
-    window.scrollTo(0, 0);
-  }
-}
-
-function initMobileMenu() {
-  const menuToggle = document.getElementById('menu-toggle');
-  const mobileMenu = document.getElementById('mobile-menu');
-  if(menuToggle && mobileMenu) {
-    menuToggle.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
-    document.addEventListener('click', (e) => {
-      if (!mobileMenu.contains(e.target) && !menuToggle.contains(e.target)) {
-        mobileMenu.classList.add('hidden');
-      }
-    });
-  }
-}
-
-function closeMobileMenu() {
-  const menu = document.getElementById('mobile-menu');
-  if(menu) menu.classList.add('hidden');
-}
-
-function initContactForm() {
-  const form = document.getElementById('contact-form');
-  if(form) {
-      form.addEventListener('submit', (e) => {
-        if (!window.location.hostname.includes('netlify')) {
-          e.preventDefault();
-          alert('Message sent! (Demo mode)');
-          form.reset();
-        }
-      });
-  }
-}</script></body></html>
+</script>
+</body>
+</html>
