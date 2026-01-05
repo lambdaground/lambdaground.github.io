@@ -1,9 +1,7 @@
-ㄹ/* CSS Variables & Theme */
+/* 기존 코드와 동일 (앞부분 생략 없이 전체 코드) */
 :root {
   --font-sans: 'Inter', system-ui, sans-serif;
   --radius: 0.75rem;
-  
-  /* Light Mode */
   --background: #ffffff;
   --foreground: #0f0f0f;
   --card: #ffffff;
@@ -33,7 +31,6 @@
   --input: #27272a;
 }
 
-/* Reset & Base */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -55,7 +52,6 @@ a {
   text-decoration: none;
 }
 
-/* Layout */
 #app {
   display: flex;
   flex-direction: column;
@@ -500,34 +496,6 @@ main {
   margin: 2rem 0;
 }
 
-/* Placeholder Pages */
-.placeholder-icon {
-  font-size: 8rem;
-  margin-bottom: 1.5rem;
-}
-
-.placeholder-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  margin-top: 2rem;
-  max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.placeholder-card h3 {
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-
-.placeholder-card p {
-  color: var(--muted-foreground);
-}
-
-/* Engineering Page */
 .page-header {
   display: flex;
   align-items: center;
@@ -552,25 +520,88 @@ main {
   margin-bottom: 2rem;
 }
 
-.tool-list {
+.guestbook-list {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.tool-card {
+.guestbook-item {
   background: var(--card);
   border: 1px solid var(--border);
+  padding: 1rem;
   border-radius: var(--radius);
-  padding: 1rem 1.5rem;
 }
 
-.tool-card h4 {
-  font-size: 1.125rem;
-  font-weight: 600;
+.guestbook-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
 }
 
-/* Responsive */
+.gb-author {
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.gb-date {
+  color: var(--muted-foreground);
+}
+
+.gb-content {
+  color: var(--muted-foreground);
+  line-height: 1.5;
+}
+
+/* About Page Styles */
+.about-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.about-item {
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.about-badge {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+.about-badge.data {
+  background: #10b981; /* Success color for Data */
+}
+
+.about-item p {
+  margin: 0.2rem 0;
+  font-size: 0.95rem;
+}
+
+.tech-stack {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.tech-tag {
+  border: 1px solid var(--border);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  color: var(--muted-foreground);
+  background: var(--card);
+}
+
 @media (min-width: 768px) {
   .nav-desktop {
     display: flex;
