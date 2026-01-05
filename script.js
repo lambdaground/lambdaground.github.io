@@ -4,11 +4,8 @@
 const SUPABASE_URL = 'https://rhiaahzaftsfnbaywcby.supabase.co'; 
 const SUPABASE_KEY = 'sb_publishable_iDFJ6pJRKCbwaE1SQleLMg_mOHD8Q4z';
 
-// Supabase 클라이언트 초기화
-// (HTML에 Supabase CDN 스크립트가 있어야 작동합니다)
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
-
 
 // ==========================================
 // 2. Translations (다국어 설정)
@@ -17,7 +14,8 @@ const translations = {
   en: {
     "nav.home": "Home",
     "nav.contact": "Contact",
-    "nav.guestbook": "Guestbook", // 추가됨
+    "nav.guestbook": "Guestbook",
+    "nav.about": "About",
     "nav.privacy": "Privacy",
     "hero.subtitle": "Where Code Becomes Play 🚀",
     "app.lotto.title": "Lotto Pick",
@@ -28,6 +26,8 @@ const translations = {
     "app.mbti.desc": "Check compatibility with parent & child animal mascots.",
     "app.engineering.title": "Engineering Tools",
     "app.engineering.desc": "RF Transmission, Magnetic Core, Radio Wave, and Coil calculations.",
+    "about.title": "About Lambda Ground",
+    "about.intro": "Lambda Ground is a specialized web platform designed for engineers, researchers, and data enthusiasts. We provide web-based simulation tools and real-time data analysis dashboards.",
     "footer.rights": "All rights reserved.",
     "contact.title": "Contact Us",
     "contact.name": "Name",
@@ -51,7 +51,8 @@ const translations = {
   ko: {
     "nav.home": "홈",
     "nav.contact": "문의하기",
-    "nav.guestbook": "방명록", // 추가됨
+    "nav.guestbook": "방명록",
+    "nav.about": "소개",
     "nav.privacy": "개인정보처리방침",
     "hero.subtitle": "모두의 놀이터 🚀",
     "app.lotto.title": "Lotto Pick",
@@ -62,6 +63,8 @@ const translations = {
     "app.mbti.desc": "부모와 아이 동물 마스코트로 확인하는 성격 궁합.",
     "app.engineering.title": "공학 도구 모음",
     "app.engineering.desc": "RF 전송선로, 자성 코어, 전파, 코일 계산 등 다양한 공학 앱.",
+    "about.title": "서비스 소개",
+    "about.intro": "Lambda Ground는 엔지니어와 연구자를 위한 전문 웹 플랫폼입니다. 웹 기반 시뮬레이션 도구와 데이터 분석 대시보드를 제공합니다.",
     "footer.rights": "모든 권리 보유.",
     "contact.title": "문의하기",
     "contact.name": "이름",
@@ -97,8 +100,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavigation();
   initMobileMenu();
   initContactForm();
-  
-  // 방명록 초기화 (Supabase)
   loadGuestbook();
 });
 
@@ -108,16 +109,13 @@ document.addEventListener('DOMContentLoaded', () => {
 const guestbookForm = document.getElementById('guestbook-form');
 const guestbookList = document.getElementById('guestbook-list');
 
-// 4-1. 방명록 쓰기 (Insert)
 if (guestbookForm) {
   guestbookForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
     const nameInput = document.getElementById('gb-name');
     const msgInput = document.getElementById('gb-message');
     const btn = guestbookForm.querySelector('button');
 
-    // 중복 방지
     btn.disabled = true;
     btn.innerText = 'Sending...';
 
@@ -128,13 +126,9 @@ if (guestbookForm) {
           name: nameInput.value,
           message: msgInput.value
         });
-
       if (error) throw error;
-
-      // 성공 처리
       guestbookForm.reset();
-      loadGuestbook(); // 목록 새로고침
-      
+      loadGuestbook();
     } catch (err) {
       console.error('Error:', err);
       alert('Failed to post message. Please try again.');
@@ -145,30 +139,23 @@ if (guestbookForm) {
   });
 }
 
-// 4-2. 방명록 읽기 (Select)
 async function loadGuestbook() {
   if (!guestbookList) return;
-
   try {
     const { data, error } = await sb
       .from('guestbook')
       .select('*')
       .order('created_at', { ascending: false });
-
     if (error) throw error;
-
     renderEntries(data);
-
   } catch (err) {
     console.error('Load Error:', err);
     guestbookList.innerHTML = `<p class="text-muted">Failed to load messages.</p>`;
   }
 }
 
-// 4-3. 화면 렌더링
 function renderEntries(entries) {
   guestbookList.innerHTML = '';
-
   if (!entries || entries.length === 0) {
     guestbookList.innerHTML = `
       <div class="empty-state text-center text-muted">
@@ -176,10 +163,8 @@ function renderEntries(entries) {
       </div>`;
     return;
   }
-
   entries.forEach(entry => {
     const dateStr = new Date(entry.created_at).toLocaleString();
-    
     const div = document.createElement('div');
     div.className = 'guestbook-item';
     div.innerHTML = `
@@ -193,7 +178,6 @@ function renderEntries(entries) {
   });
 }
 
-// XSS 방지 함수
 function escapeHtml(text) {
   if (!text) return "";
   return text
@@ -205,9 +189,8 @@ function escapeHtml(text) {
 }
 
 // ==========================================
-// 5. General UI Functions (Theme, Nav, etc.)
+// 5. General UI Functions
 // ==========================================
-
 function initTheme() {
   if (currentTheme === 'dark') {
     document.body.classList.add('dark');
@@ -225,7 +208,6 @@ function toggleTheme() {
 function updateThemeIcons() {
   const sunIcons = document.querySelectorAll('#icon-sun, #icon-sun-mobile');
   const moonIcons = document.querySelectorAll('#icon-moon, #icon-moon-mobile');
-  
   if (currentTheme === 'dark') {
     sunIcons.forEach(icon => icon.classList.remove('hidden'));
     moonIcons.forEach(icon => icon.classList.add('hidden'));
@@ -267,10 +249,8 @@ function updateAllTranslations() {
 function initNavigation() {
   document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
   document.getElementById('theme-toggle-mobile').addEventListener('click', toggleTheme);
-  
   document.getElementById('lang-toggle').addEventListener('click', toggleLanguage);
   document.getElementById('lang-toggle-mobile').addEventListener('click', toggleLanguage);
-  
   document.querySelectorAll('[data-page]').forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
@@ -283,19 +263,16 @@ function initNavigation() {
 
 function navigateToPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  
   const targetPage = document.getElementById(`page-${page}`);
   if (targetPage) {
     targetPage.classList.add('active');
     currentPage = page;
-    
     document.querySelectorAll('.nav-link').forEach(link => {
       link.classList.remove('active');
       if (link.getAttribute('data-page') === page) {
         link.classList.add('active');
       }
     });
-    
     window.scrollTo(0, 0);
   }
 }
@@ -303,12 +280,10 @@ function navigateToPage(page) {
 function initMobileMenu() {
   const menuToggle = document.getElementById('menu-toggle');
   const mobileMenu = document.getElementById('mobile-menu');
-  
   if(menuToggle && mobileMenu) {
     menuToggle.addEventListener('click', () => {
       mobileMenu.classList.toggle('hidden');
     });
-    
     document.addEventListener('click', (e) => {
       if (!mobileMenu.contains(e.target) && !menuToggle.contains(e.target)) {
         mobileMenu.classList.add('hidden');
